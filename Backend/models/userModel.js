@@ -1,7 +1,5 @@
 import createDatabaseConnection from '../DB/connect.js';
 
-import createDatabaseConnection from '../DB/connect.js';
-
 class User {
     constructor(id, first_name, last_name, username, email, telephone, passwordHash, authorization_level, is_verified) {
         this.id = id;

@@ -1,16 +1,34 @@
-import 'dotenv/config'; // Ensures environment variables are loaded
-import createDatabaseConnection from "./DB/connect.js";
+import express from 'express';
+import dotenv from 'dotenv';
+import cors from 'cors';
+import createDatabaseConnection from './DB/connect.js';
+import userRoutes from './routes/userRoutes.js';
 
-async function main() {
+dotenv.config();
+
+const app = express();
+
+// Middleware
+app.use(cors({ origin: '*' })); // Allow all origins
+app.use(express.json());
+
+// Database connection setup
+async function attachDatabase(req, res, next) {
     try {
-        const connection = await createDatabaseConnection();
-        console.log("✅ Database connection established in main function");
-        
-        // Close connection when done
-        await connection.end();
+        req.db = await createDatabaseConnection(); // Attach DB connection to each request
+        next();
     } catch (error) {
-        console.error('❌ Failed to establish database connection:', error);
+        console.error('❌ Database connection error:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
     }
 }
 
-main();
+// Routes
+app.use('/api/v1/users', attachDatabase, userRoutes);
+
+const PORT = process.env.PORT || 3000;
+
+// Start server
+app.listen(PORT, () => {
+    console.log(`✅ Server running on port ${PORT}`);
+});
