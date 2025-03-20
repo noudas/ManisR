@@ -4,14 +4,13 @@ import jwt from 'jsonwebtoken';
 
 // Generate a JWT token for authenticated users
 export function generateToken(user) {
+    if (!process.env.JWT_SECRET) {
+        throw new Error("JWT_SECRET is not defined in environment variables");
+    }
+
     return jwt.sign(
-        { 
-            id: user.id, 
-            username: user.username, 
-            authorization_level: user.authorization_level, 
-            is_verified: user.is_verified // Keep this in JWT payload but check separately
-        },
-        process.env.JWT_SECRET,
+        { id: user.id, username: user.username, authorization_level: user.authorization_level },
+        process.env.JWT_SECRET,  // ✅ Make sure this is defined
         { expiresIn: '1h' }
     );
 }

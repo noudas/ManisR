@@ -51,23 +51,25 @@ class UserController {
     async login(req, res) {
         try {
             const { username, password } = req.body;
-
+    
             if (!username || !password) {
                 return res.status(400).json({ error: 'Username and password are required' });
             }
-
+    
             const user = await User.findByUsername(username);
             if (!user) {
                 return res.status(401).json({ error: 'Invalid username or password' });
             }
-
-            // Validate password
+    
+            if (!user.passwordHash) {  // ✅ Check if passwordHash is missing
+                return res.status(500).json({ error: 'Password is missing in the database' });
+            }
+    
             const isValidPassword = await bcrypt.compare(password, user.passwordHash);
             if (!isValidPassword) {
                 return res.status(401).json({ error: 'Invalid username or password' });
             }
-
-            // Generate token
+    
             const token = generateToken(user);
             return res.status(200).json({
                 message: 'Logged in successfully',
@@ -85,7 +87,7 @@ class UserController {
             });
         }
     }
-
+    
     // ✅ Logout user
     async logout(req, res) {
         try {
