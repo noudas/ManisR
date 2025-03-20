@@ -1,3 +1,5 @@
+// server.js
+
 import express from 'express';
 import dotenv from 'dotenv';
 dotenv.config();
@@ -8,6 +10,7 @@ import userRoutes from './routes/userRoutes.js';
 
 
 const app = express();
+const mySqlConnection = await pool.getConnection();
 
 // Middleware
 app.use(cors({ origin: '*' }));
