@@ -7,7 +7,7 @@ export function generateToken(user) {
             id: user.id, 
             username: user.username, 
             authorization_level: user.authorization_level, 
-            is_verified: user.is_verified // Include email verification status 
+            is_verified: user.is_verified // Keep this in JWT payload but check separately
         },
         process.env.JWT_SECRET,
         { expiresIn: '1h' }
@@ -29,12 +29,7 @@ export function authenticateToken(req, res, next) {
             return res.status(403).json({ error: 'Invalid token' });
         }
 
-        // Ensure the user is verified before allowing access
-        if (!user.is_verified) {
-            return res.status(403).json({ error: 'Email verification required.' });
-        }
-
-        req.user = user;
+        req.user = user; // Attach user object to request
         next();
     });
 }
