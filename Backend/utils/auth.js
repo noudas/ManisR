@@ -1,3 +1,5 @@
+//./utils/auth.js
+
 import jwt from 'jsonwebtoken';
 
 // Generate a JWT token for authenticated users
