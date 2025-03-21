@@ -8,29 +8,32 @@ import cors from 'cors';
 import pool from './DB/connect.js';
 import userRoutes from './routes/userRoutes.js';
 
-
 const app = express();
-const mySqlConnection = await pool.getConnection();
 
 // Middleware
 app.use(cors({ origin: '*' }));
 app.use(express.json());
 
-// ✅ Ensure each request gets a new connection and releases it
 app.use(async (req, res, next) => {
-    const connection = await pool.getConnection();
-    req.db = connection;
-    res.on('finish', () => {
-        connection.release(); // ✅ RELEASE connection when response finishes
-    });
-    next();
+    try {
+        const connection = await pool.getConnection();
+        req.db = connection;
+
+        res.on('finish', () => {
+            connection.release();
+        });
+
+        next();
+    } catch (error) {
+        console.error('❌ Database connection error:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
 });
 
 // Routes
 app.use('/api/v1/users', userRoutes);
 
 const PORT = process.env.PORT || 3000;
-
 app.listen(PORT, () => {
     console.log(`✅ Server running on port ${PORT}`);
 });
