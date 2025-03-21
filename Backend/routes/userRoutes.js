@@ -5,12 +5,17 @@ import { checkAdmin, checkEmailVerified } from '../utils/verification.js';
 
 const router = express.Router();
 
-// ✅ Register a new user
+// ✅ Register a new user (sends email verification)
 router.post('/register', async (req, res) => {
     await UserController.createUser(req, res);
 });
 
-// ✅ User login
+// ✅ Email verification
+router.get('/verify-email', async (req, res) => {
+    await UserController.verifyEmail(req, res);
+});
+
+// ✅ User login (only if verified)
 router.post('/login', async (req, res) => {
     await UserController.login(req, res);
 });

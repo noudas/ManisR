@@ -3,8 +3,7 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-// The email that will transport the email
-// see here how to create it https://colab.research.google.com/drive/1IqKpyk1EKfRGeAQLzwRNpMny1M2GhC5z?usp=sharing
+// ✅ Create the transporter
 const transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
@@ -13,8 +12,21 @@ const transporter = nodemailer.createTransport({
     }
 });
 
-export async function sendVerificationEmail(email,verificationToken) {
+// ✅ Verify SMTP Connection
+transporter.verify(function (error, success) {
+    if (error) {
+        console.error("❌ SMTP Connection Error:", error);
+    } else {
+        console.log("✅ Server is ready to take messages");
+    }
+});
+
+// ✅ Function to send email verification
+export async function sendVerificationEmail(email, verificationToken) {
+    console.log(`📤 Preparing to send verification email to: ${email}`);
+
     const verificationLink = `${process.env.BASE_URL}/api/v1/users/verify-email?token=${verificationToken}`;
+    console.log(`🔗 Verification Link: ${verificationLink}`);
 
     const mailOptions = {
         from: process.env.EMAIL_USER,
@@ -26,13 +38,12 @@ export async function sendVerificationEmail(email,verificationToken) {
             <a href="${verificationLink}">${verificationLink}</a>
         `
     };
-    
-    try{
-        await transporter.sendMail(mailOptions);
-        console.log('Verification email sent to:', email);
-        
-    } catch (error){
-        console.error('Email sending error:', error);
-        throw new Error('Failed to send verification email');
+
+    try {
+        const info = await transporter.sendMail(mailOptions);
+        console.log("✅ Verification email sent:", info.response);
+    } catch (error) {
+        console.error("❌ Email Sending Error:", error);
+        throw new Error("Failed to send verification email");
     }
 }

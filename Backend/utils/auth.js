@@ -9,7 +9,7 @@ export function generateToken(user) {
     }
 
     return jwt.sign(
-        { id: user.id, username: user.username, authorization_level: user.authorization_level },
+        { id: user.id, username: user.username, authorization_level: user.authorization_level, is_verified: user.is_verified },
         process.env.JWT_SECRET,  // ✅ Make sure this is defined
         { expiresIn: '1h' }
     );

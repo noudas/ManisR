@@ -1,25 +1,23 @@
 import bcrypt from 'bcryptjs';
 import User from '../models/userModel.js';
 import { generateToken, clearTokenCookie } from '../utils/auth.js';
+import { sendVerificationEmail } from '../utils/emailService.js';
 
 class UserController {
-    // ✅ Create a new user
+    // ✅ Create a new user (with email verification)
     async createUser(req, res) {
         try {
             const { first_name, last_name, username, email, telephone, password, authorization_level } = req.body;
 
-            // Input validation
             if (!first_name || !last_name || !username || !email || !telephone || !password) {
                 return res.status(400).json({ error: 'All fields are required' });
             }
 
-            // Check if user already exists
             const existingUser = await User.findByUsername(username);
             if (existingUser) {
                 return res.status(400).json({ error: 'Username already exists' });
             }
 
-            // Validate role
             const validRoles = ['user', 'admin'];
             const userRole = authorization_level || 'user'; // Default to 'user'
 
@@ -27,16 +25,25 @@ class UserController {
                 return res.status(400).json({ error: "Invalid role specified" });
             }
 
-            // Hash the password before saving
+            // ✅ Hash the password before saving
             const passwordHash = await bcrypt.hash(password, 10);
-            const user = await User.createUser(first_name, last_name, username, email, telephone, passwordHash, userRole);
+
+            // ✅ Generate a hashed verification token
+            const verificationToken = await bcrypt.hash(email + Date.now(), 10);
+
+            // ✅ Create user with verification token
+            const user = await User.createUser(
+                first_name, last_name, username, email, telephone, passwordHash, userRole, verificationToken
+            );
+
+            // ✅ Send verification email
+            await sendVerificationEmail(email, verificationToken);
 
             return res.status(201).json({
-                message: 'User created successfully',
+                message: 'User created successfully. Please check your email to verify your account.',
                 data: {
                     id: user.id,
-                    username: user.username,
-                    role: user.authorization_level
+                    username: user.username
                 }
             });
         } catch (error) {
@@ -47,7 +54,31 @@ class UserController {
         }
     }
 
-    // ✅ User login
+    // ✅ Verify Email
+    async verifyEmail(req, res) {
+        try {
+            const { token } = req.query;
+            if (!token) {
+                return res.status(400).json({ error: 'Verification token is required' });
+            }
+
+            const user = await User.findByVerificationToken(token);
+            if (!user) {
+                return res.status(400).json({ error: 'Invalid or expired token' });
+            }
+
+            await User.verifyUser(user.id);
+
+            return res.status(200).json({ message: 'Email verified successfully. You can now log in.' });
+        } catch (error) {
+            return res.status(500).json({
+                error: 'Failed to verify email',
+                details: error.message
+            });
+        }
+    }
+
+    // ✅ User login (only if verified)
     async login(req, res) {
         try {
             const { username, password } = req.body;
@@ -60,9 +91,10 @@ class UserController {
             if (!user) {
                 return res.status(401).json({ error: 'Invalid username or password' });
             }
-    
-            if (!user.passwordHash) {  // ✅ Check if passwordHash is missing
-                return res.status(500).json({ error: 'Password is missing in the database' });
+
+            // ✅ Check if user is verified
+            if (!user.is_verified) {
+                return res.status(403).json({ error: 'Please verify your email before logging in' });
             }
     
             const isValidPassword = await bcrypt.compare(password, user.passwordHash);
