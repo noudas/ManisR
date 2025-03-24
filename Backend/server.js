@@ -30,17 +30,26 @@ app.use(morgan('combined')); // Logs all HTTP requests
 // ✅ Honeypot Middleware (Check if IP is a spammer)
 app.use(async (req, res, next) => {
     try {
-        const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
+        let ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
+
+        // ✅ Convert IPv6 localhost (::1) to IPv4 (127.0.0.1)
+        if (ip === '::1') ip = '127.0.0.1';
+
+        // ✅ Skip Honeypot check for localhost
+        if (ip === '127.0.0.1') {
+            console.log("🛑 Skipping Honeypot check for localhost.");
+            return next();
+        }
 
         honeypot.query(ip, (err, response) => {
             if (err) {
                 console.error('❌ Honeypot API Error:', err);
-                return next(); // Allow request to continue even if honeypot fails
+                return next(); // Allow request to continue even if Honeypot fails
             }
 
             if (response) {
                 console.warn(`🚨 Spam request blocked from IP: ${ip}`);
-                console.log(response.getFormattedResponse()); // Log the spammer details
+                console.log(response.getFormattedResponse()); // Log spam details
                 return res.status(403).json({ error: 'Request blocked: Detected as spam' });
             }
 
@@ -48,9 +57,10 @@ app.use(async (req, res, next) => {
         });
     } catch (error) {
         console.error('❌ Unexpected Honeypot Middleware Error:', error);
-        next(); // Let the request continue to prevent server crashes
+        next(); // Prevent server crash
     }
 });
+
 
 // ✅ Database Connection Middleware
 app.use(async (req, res, next) => {
