@@ -1,5 +1,3 @@
-// server.js
-
 import express from 'express';
 import dotenv from 'dotenv';
 dotenv.config();
@@ -8,13 +6,14 @@ import cors from 'cors';
 import helmet from 'helmet';
 import morgan from 'morgan';
 import rateLimit from 'express-rate-limit';
-import honeypot from 'honeypot';
+import Honeypot from 'honeypot'; // ✅ Correct import
 import pool from './DB/connect.js';
 import userRoutes from './routes/userRoutes.js';
 
 const app = express();
+const honeypot = new Honeypot(process.env.HONEYPOT_API_KEY); // ✅ Initialize honeypot with API key
 
-// Middleware
+// ✅ Security Middleware
 app.use(helmet()); // Protects against common vulnerabilities
 app.use(cors({ origin: '*' }));
 app.use(express.json());
@@ -30,23 +29,30 @@ app.use(morgan('combined')); // Logs all HTTP requests
 
 // ✅ Honeypot Middleware (Check if IP is a spammer)
 app.use(async (req, res, next) => {
-    const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
+    try {
+        const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
 
-    honeypot.queryBlacklist(process.env.HONEYPOT_API_KEY, ip, (err, result) => {
-        if (err) {
-            console.error('❌ Honeypot API Error:', err);
-            return res.status(500).json({ error: 'Honeypot API error' });
-        }
+        honeypot.query(ip, (err, response) => {
+            if (err) {
+                console.error('❌ Honeypot API Error:', err);
+                return next(); // Allow request to continue even if honeypot fails
+            }
 
-        if (result && result.found) {
-            console.warn(`🚨 Spam request blocked from IP: ${ip}`);
-            return res.status(403).json({ error: 'Request blocked: Detected as spam' });
-        }
+            if (response) {
+                console.warn(`🚨 Spam request blocked from IP: ${ip}`);
+                console.log(response.getFormattedResponse()); // Log the spammer details
+                return res.status(403).json({ error: 'Request blocked: Detected as spam' });
+            }
 
-        next(); // Proceed if not a spammer
-    });
+            next(); // Proceed if IP is not in the honeypot database
+        });
+    } catch (error) {
+        console.error('❌ Unexpected Honeypot Middleware Error:', error);
+        next(); // Let the request continue to prevent server crashes
+    }
 });
 
+// ✅ Database Connection Middleware
 app.use(async (req, res, next) => {
     try {
         const connection = await pool.getConnection();
@@ -63,9 +69,10 @@ app.use(async (req, res, next) => {
     }
 });
 
-// Routes
+// ✅ Routes
 app.use('/api/v1/users', userRoutes);
 
+// ✅ Start Server
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
     console.log(`✅ Server running on port ${PORT}`);
