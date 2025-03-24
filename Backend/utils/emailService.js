@@ -32,7 +32,7 @@ transporter.verify((error) => {
  * @param {string} verificationToken - Token for email verification.
  */
 export async function sendVerificationEmail(email, verificationToken) {
-    const verificationLink = `${process.env.BASE_URL}/api/v1/users/verify-email?token=${verificationToken}`;
+    const verificationLink = `${process.env.BASE_URL}/api/v1/auth/verify-email?token=${verificationToken}`;
 
     console.log(`📤 [Email Service] Sending verification email to ${email}`);
     console.log(`🔗 [Verification Link] ${verificationLink}`);
