@@ -40,3 +40,15 @@ export async function deleteUser(id) {
         connection.release();
     }
 }
+
+export async function getAllUsers() {
+    const connection = await pool.getConnection();
+    try {
+        const [rows] = await connection.execute(
+            `SELECT id, first_name, last_name, username, email, telephone, authorization_level, is_verified FROM users`
+        );
+        return rows;
+    } finally {
+        connection.release();
+    }
+}
