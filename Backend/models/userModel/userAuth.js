@@ -9,17 +9,23 @@ import bcrypt from 'bcryptjs';
 export async function createUser(first_name, last_name, username, email, telephone, password, authorization_level, verificationToken) {
     const connection = await pool.getConnection();
     try {
+        console.log(`[DB] Creating user: ${username}`);
+
         const passwordHash = await bcrypt.hash(password, 10);
+
         const [result] = await connection.execute(
             `INSERT INTO users (first_name, last_name, username, email, telephone, password, authorization_level, verification_token, is_verified)
              VALUES (?, ?, ?, ?, ?, ?, ?, ?, FALSE)`,
             [first_name, last_name, username, email, telephone, passwordHash, authorization_level, verificationToken]
         );
+
+        console.log(`[DB] User created successfully: ID=${result.insertId}`);
         return { id: result.insertId, first_name, last_name, username, email, telephone, authorization_level };
     } finally {
         connection.release();
     }
 }
+
 
 export async function verifyUser(id) {
     const connection = await pool.getConnection();

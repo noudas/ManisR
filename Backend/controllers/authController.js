@@ -11,42 +11,49 @@ class AuthController {
     async register(req, res) {
         try {
             const { first_name, last_name, username, email, telephone, password, authorization_level } = req.body;
-
+    
             if (!first_name || !last_name || !username || !email || !telephone || !password) {
+                console.warn(`[Auth] Registration failed: Missing required fields.`);
                 return res.status(400).json({ error: 'All fields are required' });
             }
-
+    
+            console.log(`[Auth] Registration attempt for: ${username} (${email})`);
+    
             const existingUser = await User.findByUsername(username);
             if (existingUser) {
+                console.warn(`[Auth] Registration failed: Username already exists (${username})`);
                 return res.status(400).json({ error: 'Username already exists' });
             }
-
+    
             const validRoles = ['user', 'admin'];
             const userRole = authorization_level || 'user';
-
             if (!validRoles.includes(userRole)) {
+                console.warn(`[Auth] Invalid role specified: ${authorization_level}`);
                 return res.status(400).json({ error: 'Invalid role specified' });
             }
-
-            const passwordHash = await bcrypt.hash(password, 10);
-            const verificationToken = await bcrypt.hash(email + Date.now(), 10);
-
-            const user = await User.createUser(
-                first_name, last_name, username, email, telephone, passwordHash, userRole, verificationToken
-            );
-
+    
+            // ✅ Generate email verification token
+            const verificationToken = Buffer.from(email + Date.now()).toString('hex');
+    
+            // ✅ Create user in the database (password is hashed inside `createUser`)
+            const user = await User.createUser(first_name, last_name, username, email, telephone, password, userRole, verificationToken);
+    
+            // ✅ Send verification email
             await sendVerificationEmail(email, verificationToken);
-
-            console.log(`[Auth] New user registered: ${username} (${email})`);
+    
+            console.log(`[Auth] New user registered successfully: ${username} (${email})`);
             return res.status(201).json({
                 message: 'User created successfully. Please check your email to verify your account.',
                 data: { id: user.id, username: user.username }
             });
+    
         } catch (error) {
             console.error(`[Auth] Registration failed: ${error.message}`);
             return res.status(500).json({ error: 'Failed to create user', details: error.message });
         }
     }
+    
+    
 
     async verifyEmail(req, res) {
         try {
@@ -72,27 +79,67 @@ class AuthController {
     async login(req, res) {
         try {
             const { username, password, twoFactorCode } = req.body;
+    
             if (!username || !password) {
+                console.warn(`[Auth] Login failed: Missing username or password.`);
                 return res.status(400).json({ error: 'Username and password are required' });
             }
-
+    
+            console.log(`[Auth] Login attempt for username: ${username}`);
             const user = await User.findByUsername(username);
-            if (!user || !(await bcrypt.compare(password, user.passwordHash))) {
+    
+            if (!user) {
+                console.warn(`[Auth] User not found: ${username}`);
                 return res.status(401).json({ error: 'Invalid username or password' });
             }
-
+    
+            console.log(`[Auth] User found: ID=${user.id}, Username=${user.username}`);
+    
+            // ✅ Ensure passwordHash is present before comparing
+            if (!user.passwordHash) {
+                console.error(`[Auth] Password hash missing for user: ${username}`);
+                return res.status(500).json({ error: 'Internal server error' });
+            }
+    
+            // ✅ Compare hashed password
+            const isValidPassword = await bcrypt.compare(password, user.passwordHash);
+            if (!isValidPassword) {
+                console.warn(`[Auth] Incorrect password for user: ${username}`);
+                return res.status(401).json({ error: 'Invalid username or password' });
+            }
+    
             if (!user.is_verified) {
+                console.warn(`[Auth] User email not verified: ${username}`);
                 return res.status(403).json({ error: 'Please verify your email before logging in' });
             }
-
+    
+            // ✅ Handle Two-Factor Authentication (2FA)
+            if (user.is_phone_verified) {
+                if (!twoFactorCode) {
+                    console.warn(`[Auth] 2FA required for user: ${username}`);
+                    return res.status(206).json({ error: '2FA code required' });
+                }
+    
+                const isValid2FA = await User.verifyTwoFactor(user.id, twoFactorCode);
+                if (!isValid2FA) {
+                    console.warn(`[Auth] Invalid 2FA code for user: ${username}`);
+                    return res.status(401).json({ error: 'Invalid 2FA code' });
+                }
+            }
+    
+            // ✅ Generate JWT token
             const token = generateToken(user);
-            console.log(`[Auth] User logged in: ${username}`);
+            console.log(`[Auth] User logged in successfully: ${username}`);
             return res.status(200).json({ message: 'Logged in successfully', token });
+    
         } catch (error) {
             console.error(`[Auth] Login failed: ${error.message}`);
             return res.status(500).json({ error: 'Failed to log in', details: error.message });
         }
     }
+    
+
+    
 
     async logout(req, res) {
         try {
