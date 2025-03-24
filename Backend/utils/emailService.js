@@ -1,9 +1,14 @@
+/**
+ * Email Service
+ * Handles email verification using Nodemailer.
+ */
+
 import nodemailer from 'nodemailer';
 import dotenv from 'dotenv';
 
 dotenv.config();
 
-// ✅ Create the transporter
+// Configure email transporter
 const transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
@@ -12,24 +17,28 @@ const transporter = nodemailer.createTransport({
     }
 });
 
-// ✅ Verify SMTP Connection
-transporter.verify(function (error, success) {
+// Verify SMTP Connection
+transporter.verify((error) => {
     if (error) {
-        console.error("❌ SMTP Connection Error:", error);
+        console.error("❌ [SMTP Error] Unable to connect to email server:", error);
     } else {
-        console.log("✅ Server is ready to take messages");
+        console.log("✅ [SMTP] Email service is ready to send messages");
     }
 });
 
-// ✅ Function to send email verification
+/**
+ * Sends a verification email to the user.
+ * @param {string} email - User's email address.
+ * @param {string} verificationToken - Token for email verification.
+ */
 export async function sendVerificationEmail(email, verificationToken) {
-    console.log(`📤 Preparing to send verification email to: ${email}`);
-
     const verificationLink = `${process.env.BASE_URL}/api/v1/users/verify-email?token=${verificationToken}`;
-    console.log(`🔗 Verification Link: ${verificationLink}`);
+
+    console.log(`📤 [Email Service] Sending verification email to ${email}`);
+    console.log(`🔗 [Verification Link] ${verificationLink}`);
 
     const mailOptions = {
-        from: process.env.EMAIL_USER,
+        from: `"Support Team" <${process.env.EMAIL_USER}>`,
         to: email,
         subject: 'Verify Your Email',
         html: `
@@ -41,9 +50,9 @@ export async function sendVerificationEmail(email, verificationToken) {
 
     try {
         const info = await transporter.sendMail(mailOptions);
-        console.log("✅ Verification email sent:", info.response);
+        console.log(`✅ [Email Sent] Verification email sent to ${email}: ${info.response}`);
     } catch (error) {
-        console.error("❌ Email Sending Error:", error);
+        console.error(`❌ [Email Error] Failed to send verification email to ${email}:`, error);
         throw new Error("Failed to send verification email");
     }
 }
