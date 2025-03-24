@@ -1,12 +1,43 @@
 import express from 'express';
+import { body, validationResult } from 'express-validator';
 import UserController from '../controllers/userController.js';
 import { authenticateToken } from '../utils/auth.js';
 import { checkAdmin, checkEmailVerified } from '../utils/verification.js';
 
 const router = express.Router();
 
+// ✅ Validation Middleware for Registration
+const validateRegistration = [
+    body('first_name').trim().notEmpty().withMessage('First name is required'),
+    body('last_name').trim().notEmpty().withMessage('Last name is required'),
+    body('username').trim().notEmpty().withMessage('Username is required'),
+    body('email').isEmail().withMessage('Invalid email format'),
+    body('telephone').trim().notEmpty().withMessage('Telephone is required'),
+    body('password').isLength({ min: 6 }).withMessage('Password must be at least 6 characters long'),
+    (req, res, next) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(400).json({ errors: errors.array() });
+        }
+        next();
+    }
+];
+
+// ✅ Validation Middleware for Login
+const validateLogin = [
+    body('username').trim().notEmpty().withMessage('Username is required'),
+    body('password').trim().notEmpty().withMessage('Password is required'),
+    (req, res, next) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(400).json({ errors: errors.array() });
+        }
+        next();
+    }
+];
+
 // ✅ Register a new user (sends email verification)
-router.post('/register', async (req, res) => {
+router.post('/register', validateRegistration, async (req, res) => {
     await UserController.createUser(req, res);
 });
 
@@ -16,12 +47,12 @@ router.get('/verify-email', async (req, res) => {
 });
 
 // ✅ User login (only if verified)
-router.post('/login', async (req, res) => {
+router.post('/login', validateLogin, async (req, res) => {
     await UserController.login(req, res);
 });
 
 // ✅ User logout
-router.post('/logout', async (req, res) => {
+router.post('/logout', authenticateToken, async (req, res) => {
     await UserController.logout(req, res);
 });
 
