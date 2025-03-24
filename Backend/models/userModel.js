@@ -1,8 +1,20 @@
+/**
+ * User Model - Handles Database Operations for User Management
+ *
+ * This class provides database interactions for:
+ * - User creation, authentication, and verification
+ * - Two-Factor Authentication (2FA) setup and validation
+ * - User lookup, update, and deletion
+ */
+
 import pool from '../DB/connect.js';
 import twofactor from 'node-2fa';
 
 class User {
-    // ✅ Create a new user with email verification token
+    /**
+     * Create a new user with email verification token
+     * @returns {Object} User details (excluding password)
+     */
     static async createUser(first_name, last_name, username, email, telephone, passwordHash, authorization_level = 'user', verificationToken) {
         const connection = await pool.getConnection();
         try {
@@ -13,11 +25,14 @@ class User {
             );
             return { id: result.insertId, first_name, last_name, username, email, telephone, authorization_level };
         } finally {
-            connection.release(); // ✅ RELEASE connection
+            connection.release();
         }
     }
 
-    // ✅ Find user by username
+    /**
+     * Find a user by their username
+     * @returns {Object|null} User details or null if not found
+     */
     static async findByUsername(username) {
         const connection = await pool.getConnection();
         try {
@@ -27,11 +42,14 @@ class User {
             );
             return rows.length ? rows[0] : null;
         } finally {
-            connection.release(); // ✅ RELEASE connection
+            connection.release();
         }
     }
 
-    // ✅ Find user by verification token
+    /**
+     * Find a user by their email verification token
+     * @returns {Object|null} User ID or null if not found
+     */
     static async findByVerificationToken(token) {
         const connection = await pool.getConnection();
         try {
@@ -40,11 +58,14 @@ class User {
             );
             return rows.length ? rows[0] : null;
         } finally {
-            connection.release(); // ✅ RELEASE connection
+            connection.release();
         }
     }
 
-    // ✅ Mark user as verified
+    /**
+     * Mark a user as verified by updating `is_verified` status
+     * @returns {boolean} True if successful
+     */
     static async verifyUser(id) {
         const connection = await pool.getConnection();
         try {
@@ -53,23 +74,14 @@ class User {
             );
             return true;
         } finally {
-            connection.release(); // ✅ RELEASE connection
+            connection.release();
         }
     }
 
-    // ✅ Delete user
-    static async deleteUser(id) {
-        const connection = await pool.getConnection();
-        try {
-            const [result] = await connection.execute(
-                `DELETE FROM users WHERE id = ?`, [id]
-            );
-            return result.affectedRows > 0;
-        } finally {
-            connection.release(); // ✅ RELEASE connection
-        }
-    }
-
+    /**
+     * Find a user by their ID
+     * @returns {Object|null} User details or null if not found
+     */
     static async findById(id) {
         const connection = await pool.getConnection();
         try {
@@ -83,9 +95,28 @@ class User {
         }
     }
 
+    /**
+     * Delete a user from the database
+     * @returns {boolean} True if the user was deleted
+     */
+    static async deleteUser(id) {
+        const connection = await pool.getConnection();
+        try {
+            const [result] = await connection.execute(
+                `DELETE FROM users WHERE id = ?`, [id]
+            );
+            return result.affectedRows > 0;
+        } finally {
+            connection.release();
+        }
+    }
 
-    // Two Factor Authentication
+    // ============================== 2FA Methods ==============================
 
+    /**
+     * Enable Two-Factor Authentication (2FA) for a user
+     * @returns {Object} 2FA secret and QR code for setup
+     */
     static async enableTwoFactor(id) {
         const connection = await pool.getConnection();
         try {
@@ -94,12 +125,16 @@ class User {
                 `UPDATE users SET two_factor_token = ?, is_phone_verified = 1 WHERE id = ?`,
                 [newSecret.secret, id]
             );
-            return newSecret; // Return QR code & secret for user
+            return newSecret;
         } finally {
             connection.release();
         }
     }
 
+    /**
+     * Disable Two-Factor Authentication (2FA) for a user
+     * @returns {boolean} True if successful
+     */
     static async disableTwoFactor(id) {
         const connection = await pool.getConnection();
         try {
@@ -113,6 +148,10 @@ class User {
         }
     }
 
+    /**
+     * Retrieve the user's 2FA secret
+     * @returns {string|null} 2FA secret or null if not set
+     */
     static async getTwoFactorSecret(id) {
         const connection = await pool.getConnection();
         try {
@@ -125,6 +164,10 @@ class User {
         }
     }
 
+    /**
+     * Verify a 2FA token against the stored secret
+     * @returns {boolean} True if the token is valid
+     */
     static async verifyTwoFactor(id, token) {
         const secret = await User.getTwoFactorSecret(id);
         if (!secret) return false; // 2FA not enabled
