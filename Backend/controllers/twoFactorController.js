@@ -1,5 +1,5 @@
 import qrcode from 'qrcode';
-import User from '../models/userModel.js';
+import User from '../models/userModel/index.js';
 
 /**
  * Two-Factor Authentication (2FA) Controller

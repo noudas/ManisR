@@ -1,5 +1,5 @@
 import bcrypt from 'bcryptjs';
-import User from '../models/userModel.js';
+import User from '../models/userModel/index.js';
 import { generateToken, clearTokenCookie } from '../utils/auth.js';
 import { sendVerificationEmail } from '../utils/emailService.js';
 
