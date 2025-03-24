@@ -95,13 +95,11 @@ class AuthController {
     
             console.log(`[Auth] User found: ID=${user.id}, Username=${user.username}`);
     
-            // ✅ Ensure passwordHash is present before comparing
             if (!user.passwordHash) {
                 console.error(`[Auth] Password hash missing for user: ${username}`);
                 return res.status(500).json({ error: 'Internal server error' });
             }
     
-            // ✅ Compare hashed password
             const isValidPassword = await bcrypt.compare(password, user.passwordHash);
             if (!isValidPassword) {
                 console.warn(`[Auth] Incorrect password for user: ${username}`);
@@ -113,21 +111,23 @@ class AuthController {
                 return res.status(403).json({ error: 'Please verify your email before logging in' });
             }
     
-            // ✅ Handle Two-Factor Authentication (2FA)
-            if (user.is_phone_verified) {
+            if (user.is_phone_verified != 0) {
+                console.log(`[Auth] 2FA is enabled for user: ${username}`);
+    
+                // 🚨 **Fix: Force user to enter a 2FA code**
                 if (!twoFactorCode) {
                     console.warn(`[Auth] 2FA required for user: ${username}`);
-                    return res.status(206).json({ error: '2FA code required' });
+                    return res.status(401).json({ error: 'Two-Factor Authentication (2FA) code is required' });
                 }
     
+                // ✅ Verify 2FA code
                 const isValid2FA = await User.verifyTwoFactor(user.id, twoFactorCode);
                 if (!isValid2FA) {
                     console.warn(`[Auth] Invalid 2FA code for user: ${username}`);
-                    return res.status(401).json({ error: 'Invalid 2FA code' });
+                    return res.status(401).json({ error: 'Invalid Two-Factor Authentication (2FA) code' });
                 }
-            }
+            }    
     
-            // ✅ Generate JWT token
             const token = generateToken(user);
             console.log(`[Auth] User logged in successfully: ${username}`);
             return res.status(200).json({ message: 'Logged in successfully', token });
@@ -137,8 +137,6 @@ class AuthController {
             return res.status(500).json({ error: 'Failed to log in', details: error.message });
         }
     }
-    
-
     
 
     async logout(req, res) {
