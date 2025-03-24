@@ -4,10 +4,10 @@ import { generateToken, clearTokenCookie } from '../utils/auth.js';
 import { sendVerificationEmail } from '../utils/emailService.js';
 
 /**
- * Handles user authentication: registration, login, logout, and email verification.
+ * Authentication Controller
+ * Handles user registration, login, logout, and email verification.
  */
 class AuthController {
-    // ✅ Register a new user with email verification
     async register(req, res) {
         try {
             const { first_name, last_name, username, email, telephone, password, authorization_level } = req.body;
@@ -25,7 +25,7 @@ class AuthController {
             const userRole = authorization_level || 'user';
 
             if (!validRoles.includes(userRole)) {
-                return res.status(400).json({ error: "Invalid role specified" });
+                return res.status(400).json({ error: 'Invalid role specified' });
             }
 
             const passwordHash = await bcrypt.hash(password, 10);
@@ -37,16 +37,17 @@ class AuthController {
 
             await sendVerificationEmail(email, verificationToken);
 
+            console.log(`[Auth] New user registered: ${username} (${email})`);
             return res.status(201).json({
                 message: 'User created successfully. Please check your email to verify your account.',
                 data: { id: user.id, username: user.username }
             });
         } catch (error) {
+            console.error(`[Auth] Registration failed: ${error.message}`);
             return res.status(500).json({ error: 'Failed to create user', details: error.message });
         }
     }
 
-    // ✅ Verify Email
     async verifyEmail(req, res) {
         try {
             const { token } = req.query;
@@ -60,13 +61,14 @@ class AuthController {
             }
 
             await User.verifyUser(user.id);
+            console.log(`[Auth] Email verified: User ID ${user.id}`);
             return res.status(200).json({ message: 'Email verified successfully. You can now log in.' });
         } catch (error) {
+            console.error(`[Auth] Email verification failed: ${error.message}`);
             return res.status(500).json({ error: 'Failed to verify email', details: error.message });
         }
     }
 
-    // ✅ User Login
     async login(req, res) {
         try {
             const { username, password, twoFactorCode } = req.body;
@@ -84,18 +86,21 @@ class AuthController {
             }
 
             const token = generateToken(user);
+            console.log(`[Auth] User logged in: ${username}`);
             return res.status(200).json({ message: 'Logged in successfully', token });
         } catch (error) {
+            console.error(`[Auth] Login failed: ${error.message}`);
             return res.status(500).json({ error: 'Failed to log in', details: error.message });
         }
     }
 
-    // ✅ Logout
     async logout(req, res) {
         try {
             clearTokenCookie(res);
+            console.log(`[Auth] User logged out`);
             return res.status(200).json({ message: 'Logged out successfully' });
         } catch (error) {
+            console.error(`[Auth] Logout failed: ${error.message}`);
             return res.status(500).json({ error: 'Failed to log out', details: error.message });
         }
     }
