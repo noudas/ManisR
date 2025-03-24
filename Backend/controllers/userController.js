@@ -1,4 +1,5 @@
 import bcrypt from 'bcryptjs';
+import qrcode from 'qrcode';
 import User from '../models/userModel.js';
 import { generateToken, clearTokenCookie } from '../utils/auth.js';
 import { sendVerificationEmail } from '../utils/emailService.js';
@@ -100,6 +101,17 @@ class UserController {
             const isValidPassword = await bcrypt.compare(password, user.passwordHash);
             if (!isValidPassword) {
                 return res.status(401).json({ error: 'Invalid username or password' });
+            }
+
+            if (user.is_phone_verified) {
+                if (!twoFactorCode) {
+                    return res.status(206).json({ message: "2FA required. Please enter your authentication code." });
+                }
+
+                const isValid2FA = await User.verifyTwoFactor(user.id, twoFactorCode);
+                if (!isValid2FA) {
+                    return res.status(401).json({ error: "Invalid 2FA code." });
+                }
             }
     
             const token = generateToken(user);
@@ -212,6 +224,47 @@ class UserController {
             });
         }
     }
+
+
+    // Two Factor Authentication
+
+    async enableTwoFactor(req, res) {
+        try {
+            const { id } = req.user; // Get user ID from JWT token
+
+            // ✅ Get the secret generated in `userModel.js`
+            const newSecret = await User.enableTwoFactor(id);
+
+            // ✅ Generate a scannable QR code using the stored secret
+            const qrCode = await qrcode.toDataURL(newSecret.uri);
+
+            return res.status(200).json({
+                message: "Two-Factor Authentication enabled.",
+                qrCode,  // ✅ This is what the frontend will scan
+                secret: newSecret.secret  // Optional: Backup code for the user
+            });
+        } catch (error) {
+            return res.status(500).json({
+                error: "Failed to enable 2FA",
+                details: error.message
+            });
+        }
+    }
+
+    async disableTwoFactor(req, res) {
+        try {
+            const { id } = req.user;
+            await User.disableTwoFactor(id);
+            return res.status(200).json({ message: "Two-Factor Authentication disabled." });
+        } catch (error) {
+            return res.status(500).json({
+                error: 'Failed to disable 2FA',
+                details: error.message
+            });
+        }
+    }
+
+
 }
 
 export default new UserController();

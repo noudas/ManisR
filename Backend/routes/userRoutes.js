@@ -40,4 +40,14 @@ router.delete('/delete/:id', authenticateToken, checkAdmin, async (req, res) => 
     await UserController.deleteUser(req, res);
 });
 
+// ✅ Enable 2FA (user must be logged in)
+router.post('/enable-2fa', authenticateToken, async (req, res) => {
+    await UserController.enableTwoFactor(req, res);
+});
+
+// ✅ Disable 2FA
+router.post('/disable-2fa', authenticateToken, async (req, res) => {
+    await UserController.disableTwoFactor(req, res);
+});
+
 export default router;
