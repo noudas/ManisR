@@ -4,7 +4,6 @@ import User from '../models/userModel/index.js';
  * Admin Controller - Handles user management for admins.
  */
 class AdminController {
-    // ✅ Get a list of all users
     async getAllUsers(req, res) {
         try {
             const users = await User.getAllUsers();
@@ -14,7 +13,6 @@ class AdminController {
         }
     }
 
-    // ✅ Delete a user
     async deleteUser(req, res) {
         try {
             const { id } = req.params;
