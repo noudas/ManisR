@@ -32,13 +32,10 @@ class AuthController {
                 return res.status(400).json({ error: 'Invalid role specified' });
             }
     
-            // ✅ Generate email verification token
             const verificationToken = Buffer.from(email + Date.now()).toString('hex');
     
-            // ✅ Create user in the database (password is hashed inside `createUser`)
             const user = await User.createUser(first_name, last_name, username, email, telephone, password, userRole, verificationToken);
     
-            // ✅ Send verification email
             await sendVerificationEmail(email, verificationToken);
     
             console.log(`[Auth] New user registered successfully: ${username} (${email})`);
