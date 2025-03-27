@@ -1,9 +1,9 @@
 import React, { useEffect, useRef } from 'react';
 import { View, StyleSheet, Animated, Easing } from 'react-native';
-import { Logo } from '../components/Logo';
-import { Colors } from '@constants/Colors';
+import Logo from '@components/Logo';
+import Colors from '@constants/Colors';
 
-export const LoadingScreen = () => {
+const LoadingScreen = () => {
     const spinValue = useRef(new Animated.Value(0)).current;
     const scaleValue = useRef(new Animated.Value(0.5)).current;
 
@@ -49,3 +49,5 @@ const styles = StyleSheet.create({
         backgroundColor: Colors.background,
     },
 });
+
+export default LoadingScreen;

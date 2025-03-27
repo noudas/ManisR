@@ -5,9 +5,9 @@ const pink = '#F27D98';
 const white = '#F0F7F7';
 const black = '#101010';
 const gray = '#2C2C2C';
-const lightGray ='#C4C4C40';
+const lightGray = '#C4C4C40';
 
-export const Colors = {
+const Colors = {
     primary: darkGreen,
     secondary: lightGreen,
     danger: red,
@@ -16,4 +16,6 @@ export const Colors = {
     text: black,
     muted: gray,
     lightText: lightGray,
-}
+};
+
+export default Colors;

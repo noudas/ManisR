@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Text, StyleSheet, Pressable, Animated } from 'react-native';
-import { Colors } from '@/constants/Colors';
-import { Typography } from '@/constants/Typography';
+import Colors from '@/constants/Colors';
+import Typography from '@/constants/Typography';
 
 interface ButtonProps {
     title: string;
@@ -9,7 +9,7 @@ interface ButtonProps {
     variant?: 'primary' | 'secondary';
 }
 
-export const BigButton: React.FC<ButtonProps> = ({ title, onPress, variant = 'primary' }) => {
+const BigButton: React.FC<ButtonProps> = ({ title, onPress, variant = 'primary' }) => {
     const [isHovered, setIsHovered] = useState(false);
 
     const hoverAnim = useRef(new Animated.Value(0)).current;
@@ -106,3 +106,4 @@ const styles = StyleSheet.create({
     },
 });
 
+export default BigButton;

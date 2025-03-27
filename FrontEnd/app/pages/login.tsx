@@ -1,11 +1,11 @@
 import React from "react";
 import { View, StyleSheet, Text } from "react-native";
-import { Logo } from "@/components/Logo";
-import { BigButton } from "@/components/bigButton";
-import { Colors } from "@/constants/Colors";
-import { Typography } from "@/constants/Typography";
+import Logo from "@/components/Logo";
+import BigButton from "@/components/bigButton";
+import Colors from "@/constants/Colors";
+import Typography from "@/constants/Typography";
 
-export const Login = () => {
+const Login = () => {
   return (
     <View style={styles.container}>
       <View style={styles.logoContainer}>
@@ -49,3 +49,5 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
 });
+
+export default Login;

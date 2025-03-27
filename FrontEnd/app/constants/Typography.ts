@@ -10,7 +10,7 @@ import {
   Rubik_900Black_Italic 
 } from '@expo-google-fonts/rubik';
 
-export const Typography = {
+const Typography = {
   fontFamily: {
     light: 'Rubik_300Light',
     regular: 'Rubik_400Regular',
@@ -40,3 +40,5 @@ export const Typography = {
     default: (size: number) => size * 1.0, // 100%
   }
 };
+
+export default Typography;
