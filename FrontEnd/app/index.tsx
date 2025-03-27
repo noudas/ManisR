@@ -1,7 +1,5 @@
 import { Text, View } from "react-native";
-import { LoadingScreen } from "./pages/loadingScreen";
-import { BigButton } from "@components/bigButton";
-import { SmallButton } from "@components/smallButton";
+import { Login } from "./pages/login";
 
 export default function Index() {
   return (
@@ -12,6 +10,7 @@ export default function Index() {
         alignItems: "center",
       }}
     >
+      <Login />
     </View>
   );
 }

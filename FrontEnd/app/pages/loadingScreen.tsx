@@ -35,7 +35,7 @@ export const LoadingScreen = () => {
     return (
         <View style={styles.container}>
             <Animated.View style={{ transform: [{ rotate: spin }, { scale: scaleValue }] }}>
-                <Logo />
+                <Logo width={100} height={100}  />
             </Animated.View>
         </View>
     );
