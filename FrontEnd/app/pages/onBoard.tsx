@@ -6,9 +6,8 @@ import Header from "@/components/header";
 import SmallButton from "@/components/smallButton";
 
 const OnBoard = () => {
-  const { width, height } = useWindowDimensions(); // Get screen dimensions
+  const { width, height } = useWindowDimensions();
 
-  // Dynamically adjust font sizes based on screen width
   const titleFontSize = width > 600 ? Typography.fontSize.huge : Typography.fontSize.large;
   const descriptionFontSize = width > 600 ? Typography.fontSize.medium : Typography.fontSize.small;
   const signatureFontSize = width > 600 ? Typography.fontSize.medium : Typography.fontSize.small;
@@ -45,12 +44,12 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: Colors.background,
-    paddingHorizontal: 16, // Adding padding to left/right for smaller screens
+    paddingHorizontal: 20,
   },
   headerContainer: {
     marginTop: 0,
     paddingTop: 16,
-    marginBottom: 90,
+    marginBottom: 64,
   },
   titleText: {
     fontWeight: "700",
