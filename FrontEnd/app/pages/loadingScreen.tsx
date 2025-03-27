@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import { View, StyleSheet, Animated, Easing } from 'react-native';
 import { Logo } from '../components/Logo';
+import { Colors } from '@constants/Colors';
 
 export const LoadingScreen = () => {
     const spinValue = useRef(new Animated.Value(0)).current;
@@ -45,6 +46,6 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: '#F0F7F7',
+        backgroundColor: Colors.background,
     },
 });

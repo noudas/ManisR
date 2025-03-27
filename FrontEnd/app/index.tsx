@@ -1,5 +1,4 @@
 import { Text, View } from "react-native";
-import { Logo } from "./components/Logo";
 import { LoadingScreen } from "./pages/loadingScreen";
 
 export default function Index() {
@@ -11,8 +10,6 @@ export default function Index() {
         alignItems: "center",
       }}
     >
-      <Text>Test</Text>
-      <Logo />
       <LoadingScreen />
     </View>
   );
