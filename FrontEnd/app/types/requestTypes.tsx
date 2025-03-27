@@ -1,21 +1,28 @@
-import { User } from "./userTypes";
+import type User from "./userTypes";
 
-export type RegisterRequest = {
-    first_name: string;
-    last_name: string;
-    email: string;
-    telephone: string;
-    username: string;
-    password: string;
-    authorization_level?: 'user' | 'admin';
-  };
-  
-  export type LoginRequest = {
-      username: string;
-      password: string;
-      twoFactorCode?: string; // Optional, only required if 2FA is enabled
-    };
-  
-  
-  // Allows partial updates while preventing ID/password modifications 
-  export type UpdateUserRequest = Partial<Omit<User, 'id' | 'password' | 'created_at' | 'updated_at'>>;   
+const RequestTypes = {
+  RegisterRequest: {
+    first_name: "string",
+    last_name: "string",
+    email: "string",
+    telephone: "string",
+    username: "string",
+    password: "string",
+    authorization_level: "'user' | 'admin' | undefined",
+  },
+  LoginRequest: {
+    username: "string",
+    password: "string",
+    twoFactorCode: "string | undefined",
+  },
+  UpdateUserRequest: {
+    first_name: "string | undefined",
+    last_name: "string | undefined",
+    email: "string | undefined",
+    telephone: "string | undefined",
+    username: "string | undefined",
+    authorization_level: "'user' | 'admin' | undefined",
+  }
+};
+
+export default RequestTypes;
