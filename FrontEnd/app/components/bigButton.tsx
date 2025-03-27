@@ -1,5 +1,7 @@
-import React from 'react';
-import { Text, StyleSheet, Pressable, ViewStyle, TextStyle } from 'react-native';
+import React, { useState, useEffect, useRef } from 'react';
+import { Text, StyleSheet, Pressable, Animated } from 'react-native';
+import { Colors } from '@/constants/Colors';
+import { Typography } from '@/constants/Typography';
 
 interface ButtonProps {
     title: string;
@@ -8,9 +10,33 @@ interface ButtonProps {
 }
 
 export const BigButton: React.FC<ButtonProps> = ({ title, onPress, variant = 'primary' }) => {
+    const [isHovered, setIsHovered] = useState(false);
+
+    const hoverAnim = useRef(new Animated.Value(0)).current;
+
+    useEffect(() => {
+        Animated.timing(hoverAnim, {
+            toValue: isHovered ? 1 : 0,
+            duration: 100,
+            useNativeDriver: false,
+        }).start();
+    }, [isHovered]);
+
+    const backgroundColor = hoverAnim.interpolate({
+        inputRange: [0, 1],
+        outputRange: variant === 'primary' ? [Colors.primary, Colors.secondary] : ['transparent', 'transparent'],
+    });
+
+    const borderColor = hoverAnim.interpolate({
+        inputRange: [0, 1],
+        outputRange: variant === 'secondary' ? [Colors.primary, Colors.secondary] : [Colors.primary, Colors.primary],
+    });
+
     return (
         <Pressable
             onPress={onPress}
+            onHoverIn={() => setIsHovered(true)}
+            onHoverOut={() => setIsHovered(false)}
             style={({ pressed }) => [
                 styles.button,
                 variant === 'secondary' ? styles.secondaryButton : styles.primaryButton,
@@ -18,9 +44,11 @@ export const BigButton: React.FC<ButtonProps> = ({ title, onPress, variant = 'pr
                 pressed && variant === 'secondary' ? styles.secondaryPressed : {},
             ]}
         >
-            <Text style={variant === 'secondary' ? styles.secondaryText : styles.primaryText}>
-                {title}
-            </Text>
+            <Animated.View style={[styles.animatedContainer, { backgroundColor, borderColor }]}>
+                <Text style={variant === 'secondary' ? styles.secondaryText : styles.primaryText}>
+                    {title}
+                </Text>
+            </Animated.View>
         </Pressable>
     );
 };
@@ -32,35 +60,49 @@ const styles = StyleSheet.create({
         borderRadius: 100,
         justifyContent: 'center',
         alignItems: 'center',
-        shadowColor: '#000',
+        shadowColor: Colors.primary,
         shadowOffset: { width: 0, height: 4 },
         shadowOpacity: 0.3,
         shadowRadius: 8,
-        elevation: 5, // Android shadow
+        elevation: 5,
     },
+    animatedContainer: {
+        width: '100%',
+        height: '100%',
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderRadius: 100,
+        borderWidth: 2,
+    },
+
+    // Primary button styles
     primaryButton: {
-        backgroundColor: '#39B54A', // Dark Green (Primary)
-    },
-    secondaryButton: {
-        backgroundColor: '#F27D98', // Pink (Secondary)
+        backgroundColor: Colors.primary,
     },
     primaryText: {
-        color: '#F0F7F7', // White text for primary
-        fontSize: 18,
-        fontWeight: 'bold',
-    },
-    secondaryText: {
-        color: '#101010', // Black text for secondary
-        fontSize: 18,
-        fontWeight: 'bold',
+        color: Colors.background,
+        fontSize: Typography.fontSize.medium,
+        fontWeight: '600',
+        lineHeight: Typography.lineHeight.default(Typography.fontSize.medium),
     },
     primaryPressed: {
-        transform: [{ scale: 0.96 }], // Shrinks slightly when pressed
-        opacity: 0.8, // Reduces opacity slightly
+        transform: [{ scale: 0.98 }],
+    },
+
+    // Secondary button styles
+    secondaryButton: {
+        borderColor: Colors.primary,
+        borderWidth: 1.5,
+        backgroundColor: 'transparent',
+    },
+    secondaryText: {
+        color: Colors.text,
+        fontSize: Typography.fontSize.medium,
+        fontWeight: '600',
+        lineHeight: Typography.lineHeight.default(Typography.fontSize.medium),
     },
     secondaryPressed: {
-        transform: [{ scale: 0.96 }], // Shrinks slightly when pressed
-        opacity: 0.8, // Reduces opacity slightly
+        transform: [{ scale: 0.98 }],
     },
 });
 
