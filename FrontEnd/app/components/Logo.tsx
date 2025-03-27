@@ -4,7 +4,7 @@ import { Image, View, StyleSheet } from 'react-native';
 export const Logo = () => {
     return (
         <View style={styles.logoContainer}>
-            <Image source={require('@assets/images/logo.png')} style={styles.logo} />
+            <Image source={require('@assets/images/logo.svg')} style={styles.logo} />
         </View>
     );
 };
