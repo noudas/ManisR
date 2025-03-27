@@ -1,4 +1,5 @@
 import { Text, View } from "react-native";
+import { Logo } from "./components/Logo";
 
 export default function Index() {
   return (
@@ -10,6 +11,7 @@ export default function Index() {
       }}
     >
       <Text>Test</Text>
+      <Logo />
     </View>
   );
 }
