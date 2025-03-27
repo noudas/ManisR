@@ -1,6 +1,7 @@
 import { Text, View } from "react-native";
 import { LoadingScreen } from "./pages/loadingScreen";
 import { BigButton } from "@components/bigButton";
+import { SmallButton } from "@components/smallButton";
 
 export default function Index() {
   return (
@@ -11,9 +12,6 @@ export default function Index() {
         alignItems: "center",
       }}
     >
-      <BigButton title="Hello World" onPress={() => console.log("Hello World")} />
-      <BigButton variant="secondary" title="Hello World" onPress={() => console.log("Hello World")} />
-      <LoadingScreen />
     </View>
   );
 }
