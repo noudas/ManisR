@@ -48,7 +48,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16, // Adding padding to left/right for smaller screens
   },
   headerContainer: {
-    marginBottom: 64,
+    marginTop: 0,
+    paddingTop: 16,
+    marginBottom: 90,
   },
   titleText: {
     fontWeight: "700",

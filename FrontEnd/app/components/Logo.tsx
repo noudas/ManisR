@@ -1,5 +1,7 @@
+import SvgComponent from "@/assets/images/logo";
 import React from "react";
 import { Image, View, StyleSheet } from "react-native";
+
 
 interface LogoProps {
   width?: number;
@@ -9,7 +11,7 @@ interface LogoProps {
 const Logo: React.FC<LogoProps> = ({ width = 200, height = 200 }) => {
   return (
     <View style={[styles.logoContainer, { width, height }]}>
-      <Image source={require("@assets/images/logo.svg")} style={[styles.logo, { width, height }]} />
+      <SvgComponent width={width} height={height} />
     </View>
   );
 };
