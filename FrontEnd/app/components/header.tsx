@@ -10,11 +10,11 @@ const Header = () => {
         justifyContent: "center",
         alignItems: "center",
         paddingTop: 16,
-        position: "absolute", // Fixes the header to the top
-        top: 0, // Ensures it stays at the top
-        left: 0, // Ensures it starts from the left
-        right: 0, // Ensures it stretches across the screen
-        zIndex: 1000, // Ensures it stays on top of other content
+        position: "absolute",
+        top: 0,
+        left: 0,
+        right: 0,
+        zIndex: 1000,
       }}
     >
       <Logo width={36} height={36} />
