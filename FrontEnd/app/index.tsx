@@ -7,6 +7,7 @@ import LoadingScreen from "./pages/loadingScreen";
 import CustomInput from "./components/customInput";
 import Register from "./pages/register";
 import Typography from "./constants/Typography";
+import PhoneNumber from "./pages/phoneNumber";
 
 const { width, height } = useWindowDimensions();
 
@@ -16,7 +17,7 @@ export default function Index() {
       style={styles.container}
       contentContainerStyle={styles.contentContainer}
     >
-      <Register/>
+      <PhoneNumber/>
     </ScrollView>
   );
 }
