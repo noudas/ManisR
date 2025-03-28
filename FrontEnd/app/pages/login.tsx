@@ -41,6 +41,7 @@ const styles = StyleSheet.create({
     paddingTop: 35,
     fontSize: Typography.fontSize.huge,
     fontWeight: "700",
+    fontFamily: Typography.fontFamily.bold_weight_700,
     color: Colors.text,
   },
 

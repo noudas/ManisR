@@ -94,7 +94,7 @@ const styles = StyleSheet.create({
     secondaryButton: {
         borderColor: Colors.primary,
         borderWidth: 1.5,
-        backgroundColor: 'transparent',
+        backgroundColor: Colors.background,
     },
     secondaryText: {
         color: Colors.text,

@@ -41,7 +41,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     padding: 20,
-    fontFamily: 'Rubik_400Regular',  // Default font applied to the whole screen
+    fontFamily: 'Rubik_400Regular',
   },
   loading: {
     flex: 1,
