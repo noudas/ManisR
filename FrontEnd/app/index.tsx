@@ -1,25 +1,32 @@
 import React from "react";
-import { Text, View, StyleSheet, Dimensions, useWindowDimensions, ScrollView } from "react-native";
+import { Text, View, StyleSheet, useWindowDimensions, ScrollView } from "react-native";
+import { useFonts } from "expo-font";
 import Login from "./pages/login";
-import OnBoard from "./pages/onBoard";
 import Colors from "./constants/Colors";
-import LoadingScreen from "./pages/loadingScreen";
-import CustomInput from "./components/customInput";
-import Register from "./pages/register";
-import Typography from "./constants/Typography";
-import PhoneNumber from "./pages/phoneNumber";
-import TwoFactor from "./pages/twoFactor";
-import UnderConstruction from "./pages/underConstruction";
-
-const { width, height } = useWindowDimensions();
 
 export default function Index() {
+  // Load the Rubik font
+  const [fontsLoaded] = useFonts({
+    Rubik_300Light: require("./assets/fonts/static/Normal/Rubik-Light.ttf"),
+    Rubik_400Regular: require("./assets/fonts/static/Normal/Rubik-Regular.ttf"),
+    Rubik_500Medium: require("./assets/fonts/static/Normal/Rubik-Medium.ttf"),
+    Rubik_600SemiBold: require("./assets/fonts/static/Normal/Rubik-SemiBold.ttf"),
+    Rubik_700Bold: require("./assets/fonts/static/Normal/Rubik-Bold.ttf"),
+    Rubik_800ExtraBold: require("./assets/fonts/static/Normal/Rubik-ExtraBold.ttf"),
+    Rubik_900Black: require("./assets/fonts/static/Normal/Rubik-Black.ttf"),
+  });
+
+  // Wait until the fonts are loaded
+  if (!fontsLoaded) {
+    return <View style={styles.loading}><Text>Loading...</Text></View>;
+  }
+
   return (
     <ScrollView 
       style={styles.container}
       contentContainerStyle={styles.contentContainer}
     >
-      <Login/>
+      <Login />
     </ScrollView>
   );
 }
@@ -34,5 +41,11 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     padding: 20,
+    fontFamily: 'Rubik_400Regular',  // Default font applied to the whole screen
   },
+  loading: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  }
 });
