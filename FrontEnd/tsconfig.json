@@ -12,6 +12,7 @@
       "@constants/*": ["constants/*"],
       "@hooks/*": ["hooks/*"],
       "@pages/*": ["pages/*"],
+      "@types/*": ["types/*"],
     }
   },
   "include": [
