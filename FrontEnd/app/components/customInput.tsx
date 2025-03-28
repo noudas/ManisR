@@ -8,6 +8,7 @@ import {
 } from "react-native";
 
 import Colors from "@/constants/Colors";
+import Typography from "@/constants/Typography";
 
 interface CustomInputProps {
   type: "writable" | "radio";
@@ -37,9 +38,10 @@ const CustomInput: React.FC<CustomInputProps> = ({
         <TextInput
           style={[
             styles.input,
-            isFocused && { borderBottomColor: Colors.primary },
+            isFocused && { backgroundColor: Colors.lightText },
           ]}
           placeholder={placeholder}
+          placeholderTextColor={Colors.lightText} 
           value={value}
           onChangeText={onChange}
           onFocus={() => setIsFocused(true)}
@@ -79,44 +81,50 @@ const styles = StyleSheet.create({
   container: {
     width: "100%",
     textAlign: 'right',
+    alignItems: "flex-end",
     marginBottom: 16,
   },
   label: {
     textAlign: 'right',
-    fontSize: 14,
+    fontSize: Typography.fontSize.medium,
     fontWeight: "600",
     marginBottom: 4,
     color: Colors.text,
   },
   input: {
     textAlign: 'right',
-    width:'auto',
+    width:'100%',
     borderBottomWidth: 2,
     borderBottomColor: Colors.text,
     paddingVertical: 8,
-    fontSize: 16,
+    fontSize: Typography.fontSize.medium,
     color: Colors.text,
   },
   radioContainer: {
-    flexDirection: "row",
-    gap: 10,
+    flexDirection: "row-reverse",
+    justifyContent: "flex-end",
+    alignItems: "center",
     flexWrap: "wrap",
+    gap: 8,
+    paddingTop: 24,
   },
   radioButton: {
+    flexDirection: "row-reverse",
     paddingVertical: 10,
     paddingHorizontal: 16,
-    borderRadius: 8,
+    borderRadius: 100,
     borderWidth: 2,
     borderColor: Colors.primary,
     alignItems: "center",
     justifyContent: "center",
+
   },
   radioSelected: {
     backgroundColor: Colors.primary,
     borderColor: Colors.primary,
   },
   radioText: {
-    fontSize: 16,
+    fontSize: Typography.fontSize.medium,
     color: Colors.text,
   },
   radioTextSelected: {

@@ -1,36 +1,35 @@
 import React from "react";
-import { Text, View, StyleSheet, Dimensions, useWindowDimensions  } from "react-native";
+import { Text, View, StyleSheet, Dimensions, useWindowDimensions, ScrollView } from "react-native";
 import Login from "./pages/login";
 import OnBoard from "./pages/onBoard";
 import Colors from "./constants/Colors";
 import LoadingScreen from "./pages/loadingScreen";
 import CustomInput from "./components/customInput";
+import Register from "./pages/register";
+import Typography from "./constants/Typography";
 
-// Get screen dimensions
-const { width, height } = useWindowDimensions(); 
+const { width, height } = useWindowDimensions();
 
 export default function Index() {
   return (
-    <View style={styles.container}>
-      <CustomInput
-        type="writable"
-        label="Username"
-        placeholder="Enter your username"
-        value={'username'}
-        onChange={(value: string) => console.log('test', value)}
-      />
-    </View>
+    <ScrollView 
+      style={styles.container}
+      contentContainerStyle={styles.contentContainer}
+    >
+      <Register/>
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: Colors.background,
+  },
+  contentContainer: {
+    flexGrow: 1,
     justifyContent: "center",
     alignItems: "center",
-    width: width,
-    height: height,
-    paddingHorizontal: 20,
-    backgroundColor: Colors.background,
+    padding: 20,
   },
 });

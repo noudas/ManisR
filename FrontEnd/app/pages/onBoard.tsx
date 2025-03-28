@@ -14,9 +14,7 @@ const OnBoard = () => {
 
   return (
     <View style={styles.container}>
-      <View style={styles.headerContainer}>
-        <Header />
-      </View>
+      <Header />
 
       <View>
         <Text style={[styles.titleText, { fontSize: titleFontSize }]}>Rברוכים הבאים למניש</Text>
@@ -45,11 +43,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: Colors.background,
     paddingHorizontal: 20,
-  },
-  headerContainer: {
-    marginTop: 0,
-    paddingTop: 16,
-    marginBottom: 64,
   },
   titleText: {
     fontWeight: "700",
