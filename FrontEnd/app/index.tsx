@@ -9,6 +9,7 @@ import Register from "./pages/register";
 import Typography from "./constants/Typography";
 import PhoneNumber from "./pages/phoneNumber";
 import TwoFactor from "./pages/twoFactor";
+import UnderConstruction from "./pages/underConstruction";
 
 const { width, height } = useWindowDimensions();
 
@@ -18,7 +19,7 @@ export default function Index() {
       style={styles.container}
       contentContainerStyle={styles.contentContainer}
     >
-      <TwoFactor/>
+      <Login/>
     </ScrollView>
   );
 }

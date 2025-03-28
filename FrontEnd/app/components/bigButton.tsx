@@ -82,6 +82,7 @@ const styles = StyleSheet.create({
     primaryText: {
         color: Colors.background,
         fontSize: Typography.fontSize.medium,
+        fontFamily: Typography.fontFamily.semiBold_weight_600,
         fontWeight: '600',
         lineHeight: Typography.lineHeight.default(Typography.fontSize.medium),
     },
@@ -98,6 +99,7 @@ const styles = StyleSheet.create({
     secondaryText: {
         color: Colors.text,
         fontSize: Typography.fontSize.medium,
+        fontFamily: Typography.fontFamily.semiBold_weight_600,
         fontWeight: '600',
         lineHeight: Typography.lineHeight.default(Typography.fontSize.medium),
     },
