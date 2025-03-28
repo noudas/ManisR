@@ -8,7 +8,6 @@ const LoadingScreen = () => {
     const scaleValue = useRef(new Animated.Value(0.5)).current;
 
     useEffect(() => {
-        // Spin animation (continuous loop)
         Animated.loop(
             Animated.timing(spinValue, {
                 toValue: 1,
@@ -17,8 +16,7 @@ const LoadingScreen = () => {
                 useNativeDriver: true,
             })
         ).start();
-
-        // Scale animation (bounce effect)
+        
         Animated.spring(scaleValue, {
             toValue: 1,
             friction: 3,

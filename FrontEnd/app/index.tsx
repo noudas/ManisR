@@ -3,9 +3,13 @@ import { Text, View, StyleSheet, useWindowDimensions, ScrollView } from "react-n
 import { useFonts } from "expo-font";
 import Login from "./pages/login";
 import Colors from "./constants/Colors";
+import LoadingScreen from "./pages/loadingScreen";
+import Register from "./pages/register";
+import TwoFactor from "./pages/twoFactor";
+import PhoneNumber from "./pages/phoneNumber";
+import UnderConstruction from "./pages/underConstruction";
 
 export default function Index() {
-  // Load the Rubik font
   const [fontsLoaded] = useFonts({
     Rubik_300Light: require("./assets/fonts/static/Normal/Rubik-Light.ttf"),
     Rubik_400Regular: require("./assets/fonts/static/Normal/Rubik-Regular.ttf"),
@@ -16,9 +20,8 @@ export default function Index() {
     Rubik_900Black: require("./assets/fonts/static/Normal/Rubik-Black.ttf"),
   });
 
-  // Wait until the fonts are loaded
   if (!fontsLoaded) {
-    return <View style={styles.loading}><Text>Loading...</Text></View>;
+    return <LoadingScreen/>;
   }
 
   return (
