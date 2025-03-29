@@ -46,7 +46,7 @@ app.use(async (req, res, next) => {
         let ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
         if (ip === '::1') ip = '127.0.0.1';
 
-        if (ip === '127.0.0.1') {
+        if (ip === '127.0.0.1' || ip === '192.168.1.152' || ip === '192.168.1.144') {
             console.log("[Honeypot] Localhost detected, skipping spam check.");
             return next();
         }
