@@ -13,11 +13,11 @@ const useRegister = () => {
     
     try {
       console.log('Starting registration request:', {
-        url: `${API_BASE_URL}/auth/register`,
+        url: `${API_BASE_URL}/api/v1/auth/register`,
         data: userData
       });
 
-      const response = await axios.post(`http://localhost:3000/api/v1/auth/register`, userData, {
+      const response = await axios.post(`${API_BASE_URL}/api/v1/auth/register`, userData, {
         timeout: 5000, // Add timeout
         validateStatus: (status) => {
           console.log('Response status:', status);

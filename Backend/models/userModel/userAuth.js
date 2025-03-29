@@ -6,7 +6,7 @@
 import pool from '../../DB/connect.js';
 import bcrypt from 'bcryptjs';
 
-export async function createUser(first_name, last_name, username, email, telephone, password, authorization_level, verificationToken) {
+export async function createUser(first_name, last_name, username, email, telephone, password, authorization_level, verificationToken, gender) {
     const connection = await pool.getConnection();
     try {
         console.log(`[DB] Creating user: ${username}`);
@@ -14,13 +14,13 @@ export async function createUser(first_name, last_name, username, email, telepho
         const passwordHash = await bcrypt.hash(password, 10);
 
         const [result] = await connection.execute(
-            `INSERT INTO users (first_name, last_name, username, email, telephone, password, authorization_level, verification_token, is_verified)
-             VALUES (?, ?, ?, ?, ?, ?, ?, ?, FALSE)`,
-            [first_name, last_name, username, email, telephone, passwordHash, authorization_level, verificationToken]
+            `INSERT INTO users (first_name, last_name, username, email, telephone, password, authorization_level, verification_token, is_verified, gender)
+             VALUES (?, ?, ?, ?, ?, ?, ?, ?, FALSE, ?)`,
+            [first_name, last_name, username, email, telephone, passwordHash, authorization_level, verificationToken, gender]
         );
 
         console.log(`[DB] User created successfully: ID=${result.insertId}`);
-        return { id: result.insertId, first_name, last_name, username, email, telephone, authorization_level };
+        return { id: result.insertId, first_name, last_name, username, email, telephone, authorization_level, gender };
     } finally {
         connection.release();
     }

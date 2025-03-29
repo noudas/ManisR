@@ -10,9 +10,9 @@ import { sendVerificationEmail } from '../utils/emailService.js';
 class AuthController {
     async register(req, res) {
         try {
-            const { first_name, last_name, username, email, telephone, password, authorization_level } = req.body;
+            const { first_name, last_name, username, email, telephone, password, authorization_level, gender  } = req.body;
     
-            if (!first_name || !last_name || !username || !email || !telephone || !password) {
+            if (!first_name || !last_name || !username || !email || !telephone || !password || !gender) {
                 console.warn(`[Auth] Registration failed: Missing required fields.`);
                 return res.status(400).json({ error: 'All fields are required' });
             }
@@ -34,7 +34,7 @@ class AuthController {
     
             const verificationToken = Buffer.from(email + Date.now()).toString('hex');
     
-            const user = await User.createUser(first_name, last_name, username, email, telephone, password, userRole, verificationToken);
+            const user = await User.createUser(first_name, last_name, username, email, telephone, password, userRole, verificationToken, gender);
     
             await sendVerificationEmail(email, verificationToken);
     

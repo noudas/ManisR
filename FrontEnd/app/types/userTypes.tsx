@@ -12,6 +12,7 @@ type User = {
   two_factor_token?: string | null;
   two_factor_expiry?: string | null;
   is_phone_verified: boolean;
+  gender: "אחר" | "אישה" | "גבר";
   created_at: string;
   updated_at: string;
 };

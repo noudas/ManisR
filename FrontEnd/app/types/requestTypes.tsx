@@ -9,6 +9,7 @@ const RequestTypes = {
     username: "string",
     password: "string",
     authorization_level: "'user' | 'admin' | undefined",
+    gender: "'אחר' | 'אישה' | 'גבר'",
   },
   LoginRequest: {
     username: "string",
@@ -22,6 +23,7 @@ const RequestTypes = {
     telephone: "string | undefined",
     username: "string | undefined",
     authorization_level: "'user' | 'admin' | undefined",
+    gender: "'אחר' | 'אישה' | 'גבר' | undefined",
   }
 };
 

@@ -25,7 +25,7 @@ export default function Index() {
       style={styles.container}
       contentContainerStyle={styles.contentContainer}
     >
-      <Redirect href={'/pages/login'}/>
+      <Redirect href={'/login'}/>
     </ScrollView>
   );
 }

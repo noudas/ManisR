@@ -6,10 +6,14 @@ import Colors from "@/constants/Colors";
 import Typography from "@/constants/Typography";
 import Header from "@/components/header";
 import SmallButton from "@/components/smallButton";
+import useRegister from "@/hooks/useRegister"; // Import the useRegister hook
+import LoadingScreen from "../pages/loadingScreen"; // Import the LoadingScreen component
 
 const Register = () => {
   const router = useRouter();
   const { telephone } = useLocalSearchParams(); // Get telephone from URL params
+
+  const { registerUser, loading, error } = useRegister(); // Use the hook for registration
 
   const [form, setForm] = useState({
     first_name: "",
@@ -18,7 +22,8 @@ const Register = () => {
     username: "",
     password: "",
     authorization_level: "user",
-    telephone: telephone || "", // Use phone number if provided
+    gender: "", // Make sure gender is stored here
+    telephone: Array.isArray(telephone) ? telephone[0] : telephone || "", // Ensure telephone is a string
   });
 
   const [honeypot, setHoneypot] = useState(""); // Hidden field for spam detection
@@ -28,11 +33,14 @@ const Register = () => {
   };
 
   const handleFullNameChange = (value: string) => {
-    const [first_name, last_name] = value.split(" ");
+    // Split the input based on space
+    const [first_name, ...lastNameArray] = value.split(" ");
+    const last_name = lastNameArray.join(" "); // To account for cases where the last name contains spaces
+  
     setForm((prev) => ({
       ...prev,
-      first_name: first_name || "",
-      last_name: last_name || "",
+      first_name: first_name || "", // If no first name, set empty string
+      last_name: last_name || "",   // If no last name, set empty string
     }));
   };
 
@@ -40,7 +48,7 @@ const Register = () => {
     return /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/.test(password);
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (honeypot) {
       Alert.alert("Security Check Failed", "Suspicious activity detected.");
       return;
@@ -54,15 +62,31 @@ const Register = () => {
       return;
     }
 
-    // Simulate successful registration
-    console.log("Form Data:", form);
-    Alert.alert("Registration Successful!", "Your account has been created.", [
-      {
-        text: "OK",
-        onPress: () => router.push("/login"), // Redirect to login page
-      },
-    ]);
+    try {
+      const response = await registerUser({
+        ...form,
+        telephone: form.telephone as string,
+        gender: form.gender // Ensure gender is passed correctly here
+      });
+
+      if (response) {
+        // On successful registration
+        Alert.alert("Registration Successful!", "Your account has been created.", [
+          {
+            text: "OK",
+            onPress: () => router.push("/login"), // Redirect to login page
+          },
+        ]);
+      }
+    } catch (err) {
+      // Handle error
+      Alert.alert("Registration Failed", error || "An error occurred during registration.");
+    }
   };
+
+  if (loading) {
+    return <LoadingScreen />; // Show loading screen while the registration is in progress
+  }
 
   return (
     <View style={styles.container}>
@@ -97,8 +121,8 @@ const Register = () => {
           type="radio"
           label="מה המגדר שלך?" // "What is your gender?"
           options={["אחר", "אישה", "גבר"]} // "Other", "Female", "Male"
-          value={form.authorization_level}
-          onChange={(value) => handleChange("authorization_level", value)}
+          value={form.gender} // Bind the value to the `gender` field
+          onChange={(value) => handleChange("gender", value)} // Update gender
         />
 
         <CustomInput
@@ -124,7 +148,10 @@ const Register = () => {
         * הסיסמה חייבת לכלול 8 תווים, לפחות ספרה אחת ולפחות אות אחת
       </Text>
 
-      <SmallButton title={"אישור"} onPress={handleSubmit} />
+      <SmallButton
+        title="אישור"
+        onPress={handleSubmit}
+      />
     </View>
   );
 };
