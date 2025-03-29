@@ -1,27 +1,31 @@
 import React, { useState } from "react";
 import { View, Text, StyleSheet, Alert } from "react-native";
-import CustomInput from "@/components/customInput";
+import CustomInput from "@/components/customInput"; // Assuming you have this component
 import Colors from "@/constants/Colors";
 import Typography from "@/constants/Typography";
 import Header from "@/components/header";
 import SmallButton from "@/components/smallButton";
-import RequestTypes from "@/types/requestTypes";
+import { RouteProp } from "@react-navigation/native";
+import { RootStackParamList } from "@/types/navigationTypes"; // Import navigation types
 
-type RegisterRequest = Omit<typeof RequestTypes.RegisterRequest, "telephone">; // Excluding telephone
+// Define route prop type for Register screen
+type RegisterRouteProp = RouteProp<RootStackParamList, "Register">;
 
-const Register = () => {
-  const [form, setForm] = useState<RegisterRequest>({
+const Register = ({ route }: { route: RegisterRouteProp }) => {
+  const { telephone } = route.params; // Access the "telephone" parameter
+  const [form, setForm] = useState({
     first_name: "",
     last_name: "",
     email: "",
     username: "",
     password: "",
     authorization_level: "user",
+    telephone, // Use the telephone passed from the PhoneNumber screen
   });
 
   const [honeypot, setHoneypot] = useState(""); // Hidden field for spam detection
 
-  const handleChange = (field: keyof RegisterRequest, value: string) => {
+  const handleChange = (field: keyof typeof form, value: string) => {
     setForm((prev) => ({ ...prev, [field]: value }));
   };
 
@@ -43,6 +47,7 @@ const Register = () => {
       return;
     }
 
+    // Send the form data (with the telephone) to your backend or registration function
     console.log("Form Data:", form);
     Alert.alert("Registration Successful!", "Your account has been created.");
   };
@@ -91,19 +96,17 @@ const Register = () => {
           value={form.password}
           onChange={(value) => handleChange("password", value)}
         />
-
       </View>
 
-      
-        {/* Honeypot Field (Hidden) */}
-        <View style={{ height: 0, overflow: "hidden" }}>
-          <CustomInput
-            type="writable"
-            label="Honeypot (Leave Empty)"
-            value={honeypot}
-            onChange={(value) => setHoneypot(value)}
-          />
-        </View>
+      {/* Honeypot Field (Hidden) */}
+      <View style={{ height: 0, overflow: "hidden" }}>
+        <CustomInput
+          type="writable"
+          label="Honeypot (Leave Empty)"
+          value={honeypot}
+          onChange={(value) => setHoneypot(value)}
+        />
+      </View>
 
       <Text style={styles.passwordtext}>
         * הסיסמה חייבת לכלול 8 תווים, לפחות ספרה אחת ולפחות אות אחת

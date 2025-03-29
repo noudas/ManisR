@@ -8,6 +8,7 @@ import Register from "./pages/register";
 import TwoFactor from "./pages/twoFactor";
 import PhoneNumber from "./pages/phoneNumber";
 import UnderConstruction from "./pages/underConstruction";
+import { Redirect } from "expo-router";
 
 export default function Index() {
   const [fontsLoaded] = useFonts({
@@ -29,7 +30,7 @@ export default function Index() {
       style={styles.container}
       contentContainerStyle={styles.contentContainer}
     >
-      <Login />
+      <Redirect href={'/pages/login'}/>
     </ScrollView>
   );
 }
