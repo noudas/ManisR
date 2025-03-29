@@ -16,7 +16,7 @@ interface CustomInputProps {
   placeholder?: string;
   value?: string;
   onChange?: (value: string) => void;
-  options?: string[]; // Only for radio type
+  options?: string[];
 }
 
 const CustomInput: React.FC<CustomInputProps> = ({

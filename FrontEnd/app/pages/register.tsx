@@ -27,6 +27,15 @@ const Register = () => {
     setForm((prev) => ({ ...prev, [field]: value }));
   };
 
+  const handleFullNameChange = (value: string) => {
+    const [first_name, last_name] = value.split(" ");
+    setForm((prev) => ({
+      ...prev,
+      first_name: first_name || "",
+      last_name: last_name || "",
+    }));
+  };
+
   const validatePassword = (password: string) => {
     return /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/.test(password);
   };
@@ -62,15 +71,15 @@ const Register = () => {
       <View style={styles.inputs}>
         <CustomInput
           type="writable"
-          label="מה השם שלך?"
-          placeholder="ישראלה ישראלי"
-          value={form.first_name}
-          onChange={(value) => handleChange("first_name", value)}
+          label="מה השם שלך?" // "What is your name?"
+          placeholder="ישראלה ישראלי" // Placeholder with both first and last names
+          value={`${form.first_name} ${form.last_name}`}
+          onChange={handleFullNameChange}
         />
 
         <CustomInput
           type="writable"
-          label="בחר/י שם משתמש"
+          label="בחר/י שם משתמש" // "Choose Username"
           placeholder="ישראלה"
           value={form.username}
           onChange={(value) => handleChange("username", value)}
@@ -78,7 +87,7 @@ const Register = () => {
 
         <CustomInput
           type="writable"
-          label="מה המייל שלך?"
+          label="מה המייל שלך?" // "What is your email?"
           placeholder="israela123@example.com"
           value={form.email}
           onChange={(value) => handleChange("email", value)}
@@ -86,15 +95,15 @@ const Register = () => {
 
         <CustomInput
           type="radio"
-          label="מה המגדר שלך?"
-          options={["אחר", "אישה", "גבר"]}
+          label="מה המגדר שלך?" // "What is your gender?"
+          options={["אחר", "אישה", "גבר"]} // "Other", "Female", "Male"
           value={form.authorization_level}
           onChange={(value) => handleChange("authorization_level", value)}
         />
 
         <CustomInput
           type="writable"
-          label="בחר/י סיסמה"
+          label="בחר/י סיסמה" // "Choose a password"
           placeholder=""
           value={form.password}
           onChange={(value) => handleChange("password", value)}
@@ -131,7 +140,7 @@ const styles = StyleSheet.create({
   inputs: {
     width: "100%",
     gap: 32,
-    paddingTop:90,
+    paddingTop: 90,
   },
   passwordtext: {
     fontSize: Typography.fontSize.small,
