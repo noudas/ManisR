@@ -1,18 +1,16 @@
 import React, { useState } from "react";
 import { View, Text, StyleSheet, Alert } from "react-native";
+import { useRouter, useLocalSearchParams } from "expo-router";
 import CustomInput from "@/components/customInput"; // Assuming you have this component
 import Colors from "@/constants/Colors";
 import Typography from "@/constants/Typography";
 import Header from "@/components/header";
 import SmallButton from "@/components/smallButton";
-import { RouteProp } from "@react-navigation/native";
-import { RootStackParamList } from "@/types/navigationTypes"; // Import navigation types
 
-// Define route prop type for Register screen
-type RegisterRouteProp = RouteProp<RootStackParamList, "Register">;
+const Register = () => {
+  const router = useRouter();
+  const { telephone } = useLocalSearchParams(); // Get telephone from URL params
 
-const Register = ({ route }: { route: RegisterRouteProp }) => {
-  const { telephone } = route.params; // Access the "telephone" parameter
   const [form, setForm] = useState({
     first_name: "",
     last_name: "",
@@ -20,7 +18,7 @@ const Register = ({ route }: { route: RegisterRouteProp }) => {
     username: "",
     password: "",
     authorization_level: "user",
-    telephone, // Use the telephone passed from the PhoneNumber screen
+    telephone: telephone || "", // Use phone number if provided
   });
 
   const [honeypot, setHoneypot] = useState(""); // Hidden field for spam detection
@@ -47,9 +45,14 @@ const Register = ({ route }: { route: RegisterRouteProp }) => {
       return;
     }
 
-    // Send the form data (with the telephone) to your backend or registration function
+    // Simulate successful registration
     console.log("Form Data:", form);
-    Alert.alert("Registration Successful!", "Your account has been created.");
+    Alert.alert("Registration Successful!", "Your account has been created.", [
+      {
+        text: "OK",
+        onPress: () => router.push("/login"), // Redirect to login page
+      },
+    ]);
   };
 
   return (
@@ -128,6 +131,7 @@ const styles = StyleSheet.create({
   inputs: {
     width: "100%",
     gap: 32,
+    paddingTop:90,
   },
   passwordtext: {
     fontSize: Typography.fontSize.small,

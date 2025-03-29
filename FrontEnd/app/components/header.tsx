@@ -15,6 +15,7 @@ const Header = () => {
         left: 0,
         right: 0,
         zIndex: 1000,
+        paddingBottom: 90,
       }}
     >
       <Logo width={36} height={36} />

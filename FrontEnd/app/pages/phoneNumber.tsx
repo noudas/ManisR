@@ -1,20 +1,16 @@
 import React, { useState } from "react";
 import { View, StyleSheet, Text, Alert } from "react-native";
+import { useRouter } from "expo-router";
 import Header from "@/components/header";
 import DigitInput from "@/components/digitInput";
 import Colors from "@/constants/Colors";
 import Typography from "@/constants/Typography";
 import SmallButton from "@/components/smallButton";
-import { useNavigation } from "@react-navigation/native";
-import { RootStackParamList } from "@/types/navigationTypes"; 
-import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-
-type NavigationProp = NativeStackNavigationProp<RootStackParamList, "PhoneNumber">;
 
 const PhoneNumber = () => {
   const [phoneNumber, setPhoneNumber] = useState(["0", "5", "", "", "", "", "", "", "", ""]);
   const inputRefs = Array(10).fill(null);
-  const navigation = useNavigation<NavigationProp>();
+  const router = useRouter();
 
   const handleChange = (index: number, value: string) => {
     const newPhoneNumber = [...phoneNumber];
@@ -22,18 +18,18 @@ const PhoneNumber = () => {
     setPhoneNumber(newPhoneNumber);
 
     if (value && index < 9) {
-      inputRefs[index + 1]?.focus(); // Automatically focus on the next input
+      inputRefs[index + 1]?.focus();
     }
   };
 
   const handleSubmit = () => {
-    const phone = phoneNumber.join(""); // Join array to create the full phone number string
+    const phone = phoneNumber.join(""); // Join digits into a full phone number
     if (phone.length !== 10) {
       Alert.alert("Invalid Phone Number", "Please enter a valid 10-digit phone number.");
       return;
     }
-    // Pass the phone number to the Register page
-    navigation.navigate("Register", { telephone: phone }); // Navigate with parameter
+    // Pass the phone number as a query parameter to the Register page
+    router.push({ pathname: "/register", params: { telephone: phone } });
   };
 
   return (

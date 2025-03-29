@@ -1,13 +1,8 @@
 import React from "react";
 import { Text, View, StyleSheet, useWindowDimensions, ScrollView } from "react-native";
 import { useFonts } from "expo-font";
-import Login from "./pages/login";
 import Colors from "./constants/Colors";
 import LoadingScreen from "./pages/loadingScreen";
-import Register from "./pages/register";
-import TwoFactor from "./pages/twoFactor";
-import PhoneNumber from "./pages/phoneNumber";
-import UnderConstruction from "./pages/underConstruction";
 import { Redirect } from "expo-router";
 
 export default function Index() {
