@@ -108,7 +108,7 @@ class AuthController {
                 return res.status(403).json({ error: 'Please verify your email before logging in' });
             }
     
-            if (user.is_phone_verified != 0) {
+            if (user.is_phone_verified === 1) {
                 console.log(`[Auth] 2FA is enabled for user: ${username}`);
     
                 // 🚨 **Fix: Force user to enter a 2FA code**
