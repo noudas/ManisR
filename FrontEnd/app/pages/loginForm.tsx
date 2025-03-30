@@ -56,8 +56,8 @@ const LoginForm = () => {
       <View style={styles.inputs}>
         <CustomInput
           type="writable"
-          label="מה המייל שלך?"
-          placeholder="israela123@example.com"
+          label="בחר/י שם משתמש?"
+          placeholder="ישראלה"
           value={form.email}
           onChange={(value) => handleChange("email", value)}
         />

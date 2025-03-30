@@ -115,7 +115,7 @@ const Register = () => {
         <CustomInput
           type="writable"
           label="בחר/י סיסמה"
-          placeholder=""
+          placeholder="********"
           value={form.password}
           onChange={(value) => handleChange("password", value)}
         />
