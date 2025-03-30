@@ -1,8 +1,8 @@
-import React from "react";
-import { Text, View, StyleSheet, useWindowDimensions, ScrollView } from "react-native";
+import React, { useEffect, useState } from "react";
+import { View, StyleSheet, ActivityIndicator } from "react-native";
 import { useFonts } from "expo-font";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import Colors from "./constants/Colors";
-import LoadingScreen from "./pages/loadingScreen";
 import { Redirect } from "expo-router";
 
 export default function Index() {
@@ -16,35 +16,46 @@ export default function Index() {
     Rubik_900Black: require("./assets/fonts/static/Normal/Rubik-Black.ttf"),
   });
 
-  if (!fontsLoaded) {
-    return <LoadingScreen/>;
+  const [isCheckingAuth, setIsCheckingAuth] = useState(true);
+  const [userLoggedIn, setUserLoggedIn] = useState<boolean | null>(null);
+
+  useEffect(() => {
+    const checkUserLogin = async () => {
+      try {
+        const token = await AsyncStorage.getItem("userToken");
+
+        if (token) {
+          setUserLoggedIn(true);
+        } else {
+          setUserLoggedIn(false);
+        }
+      } catch (error) {
+        console.error("Error checking login status:", error);
+        setUserLoggedIn(false);
+      } finally {
+        setIsCheckingAuth(false);
+      }
+    };
+
+    checkUserLogin();
+  }, []);
+
+  if (!fontsLoaded || isCheckingAuth) {
+    return (
+      <View style={styles.loading}>
+        <ActivityIndicator size="large" color={Colors.primary} />
+      </View>
+    );
   }
 
-  return (
-    <ScrollView 
-      style={styles.container}
-      contentContainerStyle={styles.contentContainer}
-    >
-      <Redirect href={'/login'}/>
-    </ScrollView>
-  );
+  return <Redirect href={userLoggedIn ? "/underconstruction" : "/login"} />;
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: Colors.background,
-  },
-  contentContainer: {
-    flexGrow: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    padding: 20,
-    fontFamily: 'Rubik_400Regular',
-  },
   loading: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-  }
+    backgroundColor: Colors.background,
+  },
 });
