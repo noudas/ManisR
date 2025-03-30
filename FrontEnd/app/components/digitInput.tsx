@@ -7,8 +7,10 @@ import Typography from "@/constants/Typography";
 interface DigitInputProps {
   value?: string;
   onChange?: (value: string) => void;
+  onKeyPress?: (event: { nativeEvent: { key: string } }) => void;
   autoFocus?: boolean;
   size?: "small" | "large";
+  keyboardType?: string;
 }
 
 // Use forwardRef to forward the ref from parent to TextInput

@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { View, StyleSheet, Text, Alert } from "react-native";
+import React, { useState, useRef } from "react";
+import { View, StyleSheet, Text, Alert, TextInput } from "react-native";
 import { useRouter } from "expo-router";
 import Header from "@/components/header";
 import DigitInput from "@/components/digitInput";
@@ -9,18 +9,39 @@ import SmallButton from "@/components/smallButton";
 
 const PhoneNumber = () => {
   const [phoneNumber, setPhoneNumber] = useState(["0", "5", "", "", "", "", "", "", "", ""]);
-  const inputRefs = Array(10).fill(null);
+  const inputRefs = useRef<TextInput[]>([]);
   const router = useRouter();
 
   const handleChange = (index: number, value: string) => {
+    if (value.length > 1) return; // Prevent multiple characters in one input
+
     const newPhoneNumber = [...phoneNumber];
+
+    // Ensure first two numbers remain unchanged
+    if (index < 2) return; 
+
+    // Handle backspace behavior
+    if (value === "") {
+        newPhoneNumber[index] = ""; // Clear current input
+        setPhoneNumber(newPhoneNumber);
+        
+        // Move focus back only if the previous input is not fixed
+        if (index > 2) {
+            setTimeout(() => inputRefs.current[index - 1]?.focus(), 10);
+        }
+        return;
+    }
+
+    // Handle normal input
     newPhoneNumber[index] = value;
     setPhoneNumber(newPhoneNumber);
 
-    if (value && index < 9) {
-      inputRefs[index + 1]?.focus();
+    // Move to next input if a number is entered
+    if (index < 9) {
+        setTimeout(() => inputRefs.current[index + 1]?.focus(), 10);
     }
-  };
+};
+
 
   const handleSubmit = () => {
     const phone = phoneNumber.join(""); // Join digits into a full phone number
@@ -28,7 +49,6 @@ const PhoneNumber = () => {
       Alert.alert("Invalid Phone Number", "Please enter a valid 10-digit phone number.");
       return;
     }
-    // Pass the phone number as a query parameter to the Register page
     router.push({ pathname: "/register", params: { telephone: phone } });
   };
 
@@ -39,17 +59,17 @@ const PhoneNumber = () => {
         {phoneNumber.map((digit, index) => (
           <React.Fragment key={index}>
             <DigitInput
-              ref={(ref) => (inputRefs[index] = ref)}
+              ref={(ref) => (inputRefs.current[index] = ref!)}
               value={digit}
               onChange={(value) => handleChange(index, value)}
-              autoFocus={index === 0}
+              autoFocus={index === 2}
               size="small"
+              keyboardType="numeric"
             />
             {index === 2 ? <Text style={styles.separator}>-</Text> : null}
           </React.Fragment>
         ))}
       </View>
-
       <SmallButton title={"אישור"} onPress={handleSubmit} />
     </View>
   );
@@ -59,16 +79,15 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: "center",
-    width: "100%",
     alignItems: "center",
+    width: "100%",
     textAlign: "center",
   },
   phoneInputContainer: {
     flexDirection: "row",
-    width: "100%",
     alignItems: "center",
-    gap: 5,
     justifyContent: "center",
+    gap: 5,
     paddingBottom: 80,
   },
   separator: {
