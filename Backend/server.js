@@ -28,7 +28,11 @@ const app = express();
 const honeypot = new Honeypot(process.env.HONEYPOT_API_KEY);
 
 app.use(helmet());
-app.use(cors({ origin: '*' }));
+app.use(cors({
+    origin: "*",
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    allowedHeaders: ["Content-Type", "Authorization"]
+  }));
 app.use(express.json());
 
 const limiter = rateLimit({
@@ -88,6 +92,6 @@ app.use('/api/v1', routes);
 
 // Start Server
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
+app.listen(PORT, "0.0.0.0",() => {
     console.log(`✅ Server running on port ${PORT}`);
 });
