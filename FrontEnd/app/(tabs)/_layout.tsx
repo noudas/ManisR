@@ -23,6 +23,7 @@ export default function TabLayout() {
     <View style={styles.container}>
       <Tabs screenOptions={{ headerStyle: { backgroundColor: Colors.background } }}>
         <Tabs.Screen name="login" options={{ title: "Login" }} />
+        <Tabs.Screen name="loginform" options={{ title: "Login" }} />
         <Tabs.Screen name="register" options={{ title: "Register" }} />
         <Tabs.Screen name="registerphone" options={{ title: "Register Phone" }} />
         <Tabs.Screen name="underconstruction" options={{ title: "Page Under Construction" }} />

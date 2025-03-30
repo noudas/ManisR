@@ -17,7 +17,7 @@ const Login = () => {
 
       <View style={styles.buttonContainer}>
       <BigButton title="הרשמה" onPress={() => router.push("/registerphone")} variant="primary" />
-        <BigButton title="יש לי כבר חשבון" onPress={() => router.push("/underconstruction")} variant="secondary" />
+        <BigButton title="יש לי כבר חשבון" onPress={() => router.push("/loginform")} variant="secondary" />
       </View>
     </View>
   );

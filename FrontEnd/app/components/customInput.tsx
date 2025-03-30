@@ -17,6 +17,7 @@ interface CustomInputProps {
   value?: string;
   onChange?: (value: string) => void;
   options?: string[];
+  secureTextEntry?: boolean;
 }
 
 const CustomInput: React.FC<CustomInputProps> = ({
