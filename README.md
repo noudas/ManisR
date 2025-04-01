@@ -1,4 +1,4 @@
-# Backend API - README
+# ManishR API - README
 
 ## Overview
 
@@ -95,6 +95,14 @@ Backend Folder
 ### Database
 
 - MySQL with a connection pool
+
+### Security Features
+
+- Helmet: Provides security headers to protect against web vulnerabilities.
+- CORS: Allows cross-origin requests from specified domains.
+- Rate Limiting: Prevents brute force attacks by limiting the number of requests.
+- Spam Protection: Blocks known spammers using Honeypot API.
+-  JWT Authentication: Ensures secure, stateless user authentication.
 
 ## API Endpoints
 
@@ -276,4 +284,13 @@ export async function sendVerificationEmail(email, verificationToken) {
     }
 }
 ```
+
+## Security Configuration
+
+### Middleware
+The server uses several middleware for enhanced security and functionality:
+- Helmet: Adds security headers to protect against common web vulnerabilities.
+- CORS: Configured to allow cross-origin requests from allowed domains.
+- Rate Limiting: Limits the number of requests a user can make in a given time frame to prevent brute-force attacks.
+- Honeypot: Detects and blocks spam requests using the Honeypot API.
 
