@@ -299,3 +299,118 @@ The server uses several middleware for enhanced security and functionality:
 
 -----
 # Frontend
+
+This is the frontend for the project, built using **React**, **TypeScript**, and **Vite**. The app is styled with **Tailwind CSS**, and it integrates with an **Express** backend API. 
+
+## Table of Contents
+
+- [Project Overview](#project-overview)
+- [Folder Structure](#folder-structure)
+- [Installation](#installation)
+- [Running the Application](#running-the-application)
+- [Available Scripts](#available-scripts)
+- [Environment Variables](#environment-variables)
+- [Contributing](#contributing)
+- [License](#license)
+
+## Project Overview
+
+This is the frontend portion of a web application that includes user authentication, registration, and two-factor authentication. The app includes a variety of components, pages, and hooks for handling different parts of the user experience.
+
+## Folder Structure
+
+```bash
+|-app
+  |-(tabs)
+    |-_layout.tsx
+    |-login.tsx
+    |-loginform.tsx
+    |-register.tsx
+    |-registerphone.tsx
+    |-undersonctruction.tsx
+  |-assets
+    |-fonts
+       |-static (fontfolder)
+       |-Rubik.ttf
+       |-Rubik-Italic-VariableFont_wght.ttf
+  |-images
+       |-logo.png
+       |-logo.tsx (svg)
+  |-components
+       |-bigButton.tsx
+       |-customInput.tsx
+       |-digitaInput.tsx
+       |-header.tsx
+       |-logo.tsx
+       |-smallButton.tsx
+  |-constants
+       |-Colors.ts
+       |-Typography.ts
+  |-hooks
+       |-useApiCall.ts
+       |-useLogin.ts
+       |-useRegister.ts
+  |-pages
+       |-loadingScreen.tsx
+       |-login.tsx
+       |-loginForm.tsx
+       |-onBoard.tsx
+       |-phoneNumber.tsx
+       |-register.tsx
+       |-twoFactor.tsx
+       |-underConstruction.tsx
+  |-scripts
+       |-api.ts
+  |-types
+       |-adminTypes.ts
+       |-authenticationTypes.tsx
+       |-generalAPITypes.tsx
+       |-navigationTypes.ts
+       |-requestTypes.tsx
+       |-twoFATypes.tsx
+       |-userTypes.tsx
+  |-_layout.tsx
+  |-index.tsx
+|-app.json
+|-package.json
+|-tsconfig.json
+|-README.md
+```
+
+### Main Folders:
+
+- **`app/`**: Contains the core app components and pages, including layouts, user authentication, and registration pages.
+- **`assets/`**: Contains static assets such as fonts and images used throughout the app.
+- **`components/`**: Reusable UI components like buttons, inputs, headers, and logos.
+- **`constants/`**: Defines app-wide constants like color schemes (`Colors.ts`) and typography settings (`Typography.ts`).
+- **`hooks/`**: Custom hooks for handling API calls, user login, and registration logic.
+- **`pages/`**: Different pages of the app, such as login, registration, and loading screens.
+- **`scripts/`**: Contains helper scripts such as `api.ts` to manage API calls.
+- **`types/`**: TypeScript types for different app entities like user, authentication, and request handling.
+
+## Installation
+
+To get started with the project, clone the repository and install dependencies:
+
+```bash
+git clone <repository-url>
+cd frontend
+npm install
+```
+
+## Running the Application
+
+Once dependencies are installed, you can run the app in development mode using the following command:
+
+```bash
+    npx expo start
+```
+
+In the output, you'll find options to open the app in a
+
+- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
+- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
+- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
+- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+
+You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
