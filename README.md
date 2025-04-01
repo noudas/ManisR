@@ -1,5 +1,7 @@
 # ManishR API - README
 
+# Backend
+
 ## Overview
 
 This is the backend service for the project, handling authentication, user management, two-factor authentication (2FA), and database interactions.
@@ -294,3 +296,6 @@ The server uses several middleware for enhanced security and functionality:
 - Rate Limiting: Limits the number of requests a user can make in a given time frame to prevent brute-force attacks.
 - Honeypot: Detects and blocks spam requests using the Honeypot API.
 
+
+-----
+# Frontend
