@@ -1,5 +1,42 @@
 # ManishR API - README
 
+## Table of Contents
+
+Here's your revised Table of Contents based on your README structure:  
+
+## Table of Contents
+
+- [Backend](#backend)  
+  - [Overview](#overview)  
+  - [Project Structure](#project-structure)  
+  - [Installation & Setup](#installation--setup)  
+  - [Features](#features)  
+    - [Authentication](#authentication)  
+    - [User Management](#user-management)  
+    - [Admin Functions](#admin-functions)  
+    - [Database](#database)  
+    - [Security Features](#security-features)  
+  - [API Endpoints](#api-endpoints)  
+    - [Authentication Routes](#authentication-routes)  
+    - [User Routes](#user-routes)  
+    - [Admin Routes](#admin-routes)  
+    - [Two-Factor Authentication Routes](#two-factor-authentication-routes)  
+  - [Database Connection](#database-connection)  
+  - [Routes](#routes)  
+    - [Admin Routes](#admin-routes)  
+    - [Authentication Routes](#authentication-routes)  
+    - [API Route Index](#api-route-index)  
+  - [Utilities](#utilities)  
+    - [Authentication Utility](#authentication-utility)  
+    - [Email Service](#email-service)  
+  - [Security Configuration](#security-configuration)  
+
+- [Frontend](#frontend)  
+  - [Project Overview](#project-overview)  
+  - [Folder Structure](#folder-structure)  
+  - [Installation](#installation)  
+  - [Running the Application](#running-the-application)  
+
 # Backend
 
 ## Overview
@@ -300,18 +337,7 @@ The server uses several middleware for enhanced security and functionality:
 -----
 # Frontend
 
-This is the frontend for the project, built using **React**, **TypeScript**, and **Vite**. The app is styled with **Tailwind CSS**, and it integrates with an **Express** backend API. 
-
-## Table of Contents
-
-- [Project Overview](#project-overview)
-- [Folder Structure](#folder-structure)
-- [Installation](#installation)
-- [Running the Application](#running-the-application)
-- [Available Scripts](#available-scripts)
-- [Environment Variables](#environment-variables)
-- [Contributing](#contributing)
-- [License](#license)
+This is the frontend for the project, built using **React**, **TypeScript**, and **Vite**. The app is styled and it integrates with an **Express** backend API. 
 
 ## Project Overview
 
