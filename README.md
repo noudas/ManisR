@@ -1,8 +1,6 @@
 # ManishR API - README
 
-## Table of Contents
-
-Here's your revised Table of Contents based on your README structure:  
+React Native app with backend / frontend integration for a Coding challenge
 
 ## Table of Contents
 
